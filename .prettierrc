@@ -1,0 +1,16 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 120,
+  "overrides": [
+    {
+      "files": "*.{css,scss,html,js,jsx,ts,tsx}",
+      "options": {
+        "tailwindConfig": "./tailwind.config.js"
+      }
+    }
+  ],
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
