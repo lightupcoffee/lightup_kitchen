@@ -1,4 +1,3 @@
-import CButton from './cbutton'
 const ConfirmModal = ({ text, canceltext, confirmtext, onCancel, onConfirm }) => {
   const stopClick = (event) => {
     event.stopPropagation()
@@ -14,8 +13,8 @@ const ConfirmModal = ({ text, canceltext, confirmtext, onCancel, onConfirm }) =>
         >
           <p className="h1 mb-4">{text}</p>
           <div className=" flex justify-between gap-4">
-            <CButton className="" text={canceltext} mode={'secondary'} size={'sm'} click={onCancel}></CButton>
-            <CButton className="" text={confirmtext} mode={'primary'} size={'sm'} click={onConfirm}></CButton>
+            <button className="" onClick={onCancel}></button>
+            <button className="" onClick={onConfirm}></button>
           </div>
         </div>
       </div>
