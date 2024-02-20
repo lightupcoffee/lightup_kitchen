@@ -45,16 +45,42 @@ module.exports = {
       textColor: ({ theme }) => theme('colors'),
       // 覆蓋預設的背景顏色
       backgroundColor: ({ theme }) => theme('colors'),
+      borderColor: ({ theme }) => ({
+        ...theme('colors'),
+        DEFAULT: theme('colors.gray.700', 'currentColor'),
+      }),
       borderRadius: {
         none: '0',
         xs: '0.1875rem',
-        sm: '0.625rem',
-        default: '1rem',
-        lg: '1.25rem',
-        xl: '1.75rem',
+        sm: '0.625rem', //10px
+        default: '1rem', //16px
+        lg: '1.25rem', //20px
+        xl: '1.75rem', //28px
+      },
+      borderWidth: {
+        1: '1px',
       },
       fontSize: {
         sm: '0.875rem', //14px
+      },
+      padding: {
+        7.5: '1.875rem',
+        9.5: '2.375rem',
+        18: '4.5rem',
+      },
+      space: {
+        7.5: '1.875rem',
+        9.5: '2.375rem',
+      },
+      gap: {
+        7.5: '1.875rem',
+      },
+      boxShadow: {
+        lv1: '0px 2px 4px 0 rgba(0,0,0,0.5)',
+        lv2: '4px 8px 10px 0 rgba(0,0,0,0.3)',
+        lv3: '6px 10px 16px 0 rgba(0,0,0,0.25)',
+        lv3: '12px 16px 20px 0 rgba(0,0,0,0.2)',
+        y: '0px -8px 20px 0 rgba(0,0,0,0.25)',
       },
     },
   },
