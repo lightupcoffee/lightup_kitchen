@@ -42,8 +42,8 @@ const Kitchen = ({ categorys, products }) => {
   const [currentTab, setcurrentTab] = useState(0)
 
   return (
-    <div className="flex h-full flex-col overflow-hidden py-18">
-      <div className="border-b-2 border-gray-700 px-12">
+    <div className="flex h-full flex-col  py-18">
+      <div className=" border-b-2 border-gray-700 px-12">
         <div className="flex justify-between">
           <div className="h3"> 排隊訂單</div>
           <div className="c4 text-end text-gray-500">

@@ -9,17 +9,14 @@ export default async function updateOrderbyId(req, res) {
 
     const client = await db.connect()
 
-    const { order} = req.body
+    const { order } = req.body
 
-  
-
-    const result = await client.query(
+    client.query(
       `UPDATE lightup."Order"
     SET totalamount=${order.totalamount}, item='${JSON.stringify(order.item)}'
     WHERE orderid=${order.orderid} ; `,
     )
 
-    res.status(200).json(result.rows)
     client.release()
 
     return res.status(200).json({ success: true })

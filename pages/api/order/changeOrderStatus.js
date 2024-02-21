@@ -11,9 +11,8 @@ export default async function updateOrderbyId(req, res) {
 
     const { orderId, status } = req.body
 
-    const result = await client.query(`UPDATE lightup."Order" SET status=${status} WHERE orderid=${orderId} ; `)
+    await client.query(`UPDATE lightup."Order" SET status=${status} WHERE orderid=${orderId} ; `)
 
-    res.status(200).json(result.rows)
     client.release()
 
     return res.status(200).json({ success: true })

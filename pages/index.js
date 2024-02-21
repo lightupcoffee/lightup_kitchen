@@ -14,8 +14,8 @@ function Home({ categorys, products }) {
   const [currentpage, setcurrentpage] = useState(sidebarpage.kitchen)
 
   return (
-    <div className="flex h-svh ">
-      <div id="sidenav" className="flex w-32 flex-col justify-end gap-8 bg-gray-800 px-6 py-16 ">
+    <div className="flex max-w-full ">
+      <div id="sidenav" className="flex w-32 shrink-0 flex-col justify-end gap-8 bg-gray-800 px-6 py-16 ">
         {Object.values(sidebarpage).map((x) => (
           <div
             onClick={() => {
@@ -34,7 +34,8 @@ function Home({ categorys, products }) {
           </div>
         ))}
       </div>
-      <div id="content" className="flex-1 bg-gray-900">
+
+      <div className=" h-svh max-w-full  bg-gray-900" style={{ width: 'calc(100vw - 128px)' }}>
         {currentpage === sidebarpage.kitchen && <Kitchen categorys={categorys} products={products}></Kitchen>}
         {currentpage === sidebarpage.orderlist && <OrderList></OrderList>}
         {currentpage === sidebarpage.editproduct && <EditProduct></EditProduct>}
