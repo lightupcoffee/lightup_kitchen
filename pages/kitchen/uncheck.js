@@ -93,10 +93,14 @@ const Uncheck = ({ categorys, products }) => {
         {orders
           .filter((x) => x.status === 0)
           .map((order) => (
-            <div key={order.orderid} className="flex flex-col rounded-lg bg-gray-800 " style={{ minWidth: '375px' }}>
+            <div
+              key={order.orderid}
+              className="flex flex-col rounded-default bg-gray-800 "
+              style={{ minWidth: '375px' }}
+            >
               <div className="p-4">
                 <div className="flex items-start justify-between">
-                  <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
+                  <span className="c3 rounded-lg bg-white bg-opacity-10 px-2 py-1 text-gray-400">
                     # {order.orderid.toString().padStart(6, '0')}
                   </span>
                   <div

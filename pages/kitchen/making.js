@@ -52,7 +52,11 @@ const Making = ({}) => {
         {orders
           .filter((x) => x.status === 1)
           .map((order) => (
-            <div key={order.orderid} className="flex  flex-col rounded-lg bg-gray-800 " style={{ minWidth: '375px' }}>
+            <div
+              key={order.orderid}
+              className="flex  flex-col rounded-default bg-gray-800 "
+              style={{ minWidth: '375px' }}
+            >
               <div className="p-4">
                 <div>
                   <span className="c3 rounded-lg bg-white bg-opacity-10 px-2 py-1">
