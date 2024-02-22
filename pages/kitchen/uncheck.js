@@ -88,26 +88,26 @@ const Uncheck = ({ categorys, products }) => {
     }
   })
   return (
-    <div className=" h-full px-12 pt-7.5">
-      <div id="redarea" className=" hide-scrollbar flex h-full w-full gap-7.5 overflow-x-auto ">
+    <div className=" h-full px-6 pt-3.5">
+      <div className=" hide-scrollbar flex h-full w-full gap-3.5 overflow-x-auto ">
         {orders
           .filter((x) => x.status === 0)
           .map((order) => (
-            <div key={order.orderid} className="flex flex-col rounded-lg bg-gray-800 " style={{ minWidth: '770px' }}>
-              <div className="p-8">
+            <div key={order.orderid} className="flex flex-col rounded-lg bg-gray-800 " style={{ minWidth: '375px' }}>
+              <div className="p-4">
                 <div className="flex items-start justify-between">
-                  <span className="c3 rounded-xl bg-white bg-opacity-10 px-4 py-2 text-gray-400">
+                  <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
                     # {order.orderid.toString().padStart(6, '0')}
                   </span>
                   <div
-                    className={` cursor-pointer rounded-sm border-2 p-4 ${editobj?.orderid === order.orderid ? 'border-gray-800 bg-gray-900' : ''}`}
+                    className={` cursor-pointer rounded-sm border-1 p-2 ${editobj?.orderid === order.orderid ? 'border-gray-800 bg-gray-900' : ''}`}
                     onClick={() => {
                       editmode(order)
                     }}
                   >
                     <svg
-                      width="36"
-                      height="36"
+                      width="18"
+                      height="18"
                       viewBox="0 0 36 36"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +127,7 @@ const Uncheck = ({ categorys, products }) => {
               </div>
               {editobj?.orderid === order.orderid ? ( //編輯模式
                 <div className="flex h-full flex-col">
-                  <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-12 py-4">
+                  <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                     {editobj.item.map((x) => (
                       <div
                         key={x}
@@ -141,53 +141,53 @@ const Uncheck = ({ categorys, products }) => {
                             className="image-filter mx-auto"
                             src={`/images/App/minus24x24.svg`}
                             alt="/minus"
-                            width={36}
-                            height={36}
+                            width={18}
+                            height={18}
                           />
-                          <div className="w-12 text-center">{x[4]}</div>
+                          <div className="w-6 text-center">{x[4]}</div>
                           <Image
                             onClick={() => editorderitem(x[1], 'plus')}
                             className="image-filter mx-auto"
                             src={`/images/App/plus24x24.svg`}
                             alt="plus"
-                            width={36}
-                            height={36}
+                            width={18}
+                            height={18}
                           />
                         </div>
                         <div className="col-start-10 col-end-13 text-end"> NT ${x[3] * x[4]}</div>
                       </div>
                     ))}
-                    <div className="  py-4">
+                    <div className="  py-2">
                       <div
                         onClick={() => setaddProductDialog(true)}
-                        className="c2 grid w-full place-items-center rounded-default border-2 border-dashed border-gray-500 bg-gray-700 py-3 text-center "
+                        className="c2 grid w-full place-items-center rounded-default border-2 border-dashed border-gray-500 bg-gray-700 py-1.5 text-center "
                       >
                         <Image
                           className="image-filter mx-auto"
                           src={`/images/36x/Hero/plus.svg`}
                           alt="plus"
-                          width={36}
-                          height={36}
+                          width={18}
+                          height={18}
                         />
                       </div>
                     </div>
                   </div>
-                  <div className="h3 flex w-full justify-between px-12 pb-12 pt-6 shadow-y">
+                  <div className="h3 flex w-full justify-between px-12 pb-6 pt-3 shadow-y">
                     <div>Total</div>
                     <div>NT ${formatCurrency(editobj.totalamount)}</div>
                   </div>
-                  <div className="w-full p-8 shadow-y">
-                    <div className="flex gap-4">
+                  <div className="w-full p-4 shadow-y">
+                    <div className="flex gap-2">
                       <div
-                        className="grid place-items-center rounded-default bg-rose-600 px-9.5 py-7"
+                        className="grid place-items-center rounded-sm bg-rose-600 px-2.5 py-3"
                         onClick={() => {
                           setdeleteorderid(order.orderid)
                           setdeleteConfirmDialog(true)
                         }}
                       >
-                        <Image src={`/images/36x/Hero/trash.svg`} alt="plus" width={48} height={48} />
+                        <Image src={`/images/36x/Hero/trash.svg`} alt="plus" width={24} height={24} />
                       </div>
-                      <div className="c1 px-auto w-full rounded-default border py-7 text-center" onClick={saveChange}>
+                      <div className="c1 px-auto w-full rounded-sm border py-3.5 text-center" onClick={saveChange}>
                         儲存編輯
                       </div>
                     </div>
@@ -195,11 +195,11 @@ const Uncheck = ({ categorys, products }) => {
                 </div>
               ) : (
                 <div className="flex h-full flex-col">
-                  <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-12 py-4">
+                  <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                     {order.item.map((x) => (
                       <div
                         key={x}
-                        className=" c2  item grid cursor-pointer grid-cols-12 items-center   py-4 text-gray-400 "
+                        className=" c2  item grid cursor-pointer grid-cols-12 items-center   py-2 text-gray-400 "
                       >
                         <div className="col-start-1 col-end-5 text-nowrap">{x[2]}</div>
 
@@ -209,13 +209,13 @@ const Uncheck = ({ categorys, products }) => {
                       </div>
                     ))}
                   </div>
-                  <div className="h3 flex w-full justify-between px-12 pb-12 pt-6 shadow-y">
+                  <div className="h3 flex w-full justify-between px-6 pb-6 pt-3 shadow-y">
                     <div>Total</div>
                     <div>NT ${formatCurrency(order.totalamount)}</div>
                   </div>
-                  <div className="w-full p-8 shadow-y">
+                  <div className="w-full p-4 shadow-y">
                     <div
-                      className="c1 px-auto w-full rounded-default bg-orange-500 py-7 text-center text-white"
+                      className="c1 px-auto w-full rounded-sm bg-orange-500 py-3.5 text-center text-white"
                       onClick={() => updateOrderStatus(order.orderid, 1)}
                     >
                       訂單結帳
@@ -226,30 +226,30 @@ const Uncheck = ({ categorys, products }) => {
             </div>
           ))}
         <Dialog isOpen={addProductDialog} onClose={() => setaddProductDialog(false)}>
-          <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-12 py-7.5">
+          <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-6 py-3.5">
             <span>新增品項</span>
             <div className="grid place-items-center  " onClick={() => setaddProductDialog(false)}>
-              <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={36} height={36} />
+              <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
-          <div className="p-12">
+          <div className="p-6">
             <Dropdown option={productoption} onSelect={additem} />
           </div>
         </Dialog>
 
         <Dialog isOpen={deleteConfirmDialog} onClose={() => setdeleteConfirmDialog(false)}>
-          <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-12 py-7.5">
+          <div className="c2 flex justify-between rounded-t-default bg-gray-800 px-6 py-3.5">
             <span>確認刪除</span>
             <div className="grid place-items-center  " onClick={() => setdeleteConfirmDialog(false)}>
-              <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={36} height={36} />
+              <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
-          <div className="c1 grid min-h-64 place-items-center p-12">
+          <div className="c1 grid min-h-32 place-items-center p-6">
             您是否要刪除訂單 <span className="text-rose-600">#{deleteorderid?.toString().padStart(6, '0')}</span>
           </div>
-          <div className="c2 flex w-full gap-4 border-t-1 p-8 ">
+          <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
             <div
-              className="w-full rounded-default bg-gray-800 py-7 text-center"
+              className="w-full rounded-default bg-gray-800 py-3.5 text-center"
               onClick={() => {
                 setdeleteConfirmDialog(false)
                 setdeleteorderid(null)
@@ -258,7 +258,7 @@ const Uncheck = ({ categorys, products }) => {
               取消
             </div>
             <div
-              className="w-full rounded-default  bg-orange-500 py-7 text-center"
+              className="w-full rounded-default  bg-orange-500 py-3.5 text-center"
               onClick={() => {
                 deleteOrder(deleteorderid)
                 setdeleteConfirmDialog(false)

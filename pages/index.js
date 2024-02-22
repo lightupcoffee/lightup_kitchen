@@ -15,27 +15,27 @@ function Home({ categorys, products }) {
 
   return (
     <div className="flex max-w-full ">
-      <div id="sidenav" className="flex w-32 shrink-0 flex-col justify-end gap-8 bg-gray-800 px-6 py-16 ">
+      <div id="sidenav" className="flex w-16 shrink-0 flex-col justify-end gap-4 bg-gray-800 px-3 py-8 ">
         {Object.values(sidebarpage).map((x) => (
           <div
             onClick={() => {
               setcurrentpage(x)
             }}
-            key={x} // 添加 key 属性，因为我们在 map 中渲染列表
-            className={`px-4 py-3 ${currentpage === x ? 'rounded-xl bg-gray-700 opacity-100' : 'opacity-40'}`}
+            key={x}
+            className={`px-2 py-2 ${currentpage === x ? 'rounded-default bg-gray-700 opacity-100' : 'opacity-40'}`}
           >
             <Image
               className="mx-auto"
               src={`/images/36x/Hero/document-text.svg`} // 圖片的路徑
               alt="document-text" // 圖片描述
-              width={48} // 圖片的寬度
-              height={48} // 圖片的高度
+              width={32} // 圖片的寬度
+              height={32} // 圖片的高度
             />
           </div>
         ))}
       </div>
 
-      <div className=" h-svh max-w-full  bg-gray-900" style={{ width: 'calc(100vw - 128px)' }}>
+      <div className=" h-svh max-w-full  bg-gray-900" style={{ width: 'calc(100vw - 64px)' }}>
         {currentpage === sidebarpage.kitchen && <Kitchen categorys={categorys} products={products}></Kitchen>}
         {currentpage === sidebarpage.orderlist && <OrderList></OrderList>}
         {currentpage === sidebarpage.editproduct && <EditProduct></EditProduct>}

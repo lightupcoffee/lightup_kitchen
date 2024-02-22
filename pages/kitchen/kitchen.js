@@ -42,8 +42,8 @@ const Kitchen = ({ categorys, products }) => {
   const [currentTab, setcurrentTab] = useState(0)
 
   return (
-    <div className="flex h-full flex-col  py-18">
-      <div className=" border-b-2 border-gray-700 px-12">
+    <div className="flex h-full flex-col  py-9">
+      <div className=" border-b-2 border-gray-700 px-6">
         <div className="flex justify-between">
           <div className="h3"> 排隊訂單</div>
           <div className="c4 text-end text-gray-500">
@@ -55,12 +55,12 @@ const Kitchen = ({ categorys, products }) => {
           {Object.entries(tablist).map(([id, title]) => (
             <div
               key={id}
-              className={`c2 flex cursor-pointer items-center gap-2 border-b-8 pb-6 ${currentTab == id ? 'border-orange-500 text-white' : 'border-transparent text-gray-500'}`}
+              className={`c2 flex cursor-pointer items-center gap-2 border-b-4 pb-1.5 ${currentTab == id ? 'border-orange-500 text-white' : 'border-transparent text-gray-500'}`}
               onClick={() => setcurrentTab(id)}
             >
               {title}
               <span
-                className={`c4 round-full rounded-full px-2 py-1 text-white ${currentTab == id ? 'bg-orange-500' : 'bg-gray-700'}`}
+                className={`c4 round-full rounded-full px-1 py-0.5 text-white ${currentTab == id ? 'bg-orange-500' : 'bg-gray-700'}`}
               >
                 {orders.filter((x) => x.status == id).length}
               </span>
