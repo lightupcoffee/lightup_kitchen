@@ -32,10 +32,10 @@ export const OrderProvider = ({ children }) => {
   }
 
   // 更新訂單內容
-  const updateOrder = async (order) => {
+  const updateOrderItem = async (order) => {
     await axios({
       method: 'post',
-      url: '/order/updateOrderbyId',
+      url: '/order/updateOrderItem',
       //API要求的資料
       data: {
         order: order,
@@ -68,14 +68,14 @@ export const OrderProvider = ({ children }) => {
   }
 
   // 變更訂單狀態
-  const updateOrderStatus = async (orderId, status) => {
+  const updateOrder = async (orderId, data) => {
     await axios({
       method: 'post',
-      url: '/order/changeOrderStatus',
+      url: '/order/updateOrder',
       //API要求的資料
       data: {
         orderId: orderId,
-        status: status,
+        data: data,
       },
     })
       .then((res) => {
@@ -90,9 +90,9 @@ export const OrderProvider = ({ children }) => {
     <OrderContext.Provider
       value={{
         orders,
-        updateOrder,
+        updateOrderItem,
         deleteOrder,
-        updateOrderStatus,
+        updateOrder,
       }}
     >
       {children}

@@ -1,4 +1,5 @@
 export function formatDate(dateString) {
+  if (!dateString) return ''
   const options = {
     year: 'numeric',
     month: '2-digit',

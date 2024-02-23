@@ -52,10 +52,10 @@ module.exports = {
       borderRadius: {
         none: '0',
         xs: '0.1875rem',
-        sm: '0.625rem', //10px
-        default: '1rem', //16px
-        lg: '1.25rem', //20px
-        xl: '1.75rem', //28px
+        sm: '0.3125rem', //5px
+        default: '0.5rem', //8px
+        lg: '0.625rem', //10px
+        xl: '0.875rem', //14px
       },
       borderWidth: {
         1: '1px',
@@ -81,6 +81,17 @@ module.exports = {
         lv3: '6px 10px 16px 0 rgba(0,0,0,0.25)',
         lv3: '12px 16px 20px 0 rgba(0,0,0,0.2)',
         y: '0px -8px 20px 0 rgba(0,0,0,0.25)',
+      },
+      gridColumn: {
+        'span-14': 'span 14 / span 14',
+      },
+      gridColumnStart: {
+        13: '13',
+        14: '14',
+      },
+      gridColumnEnd: {
+        13: '13',
+        14: '14',
       },
     },
   },

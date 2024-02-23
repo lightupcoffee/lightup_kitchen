@@ -1,26 +1,37 @@
-import { formatCurrency } from '../../utils/utils'
+import { formatCurrency, formatDate } from '../../utils/utils'
 import Image from 'next/image'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useOrders } from '../../context/OrderContext'
 import Dialog from '../components/dialog'
 import Dropdown from '../components/dropdown'
-const Uncheck = ({ categorys, products }) => {
+import axios from '../../utils/axiosInstance'
+const Uncheck = () => {
+  const [categorys, setcategorys] = useState([])
+  const [products, setproducts] = useState([])
   const [addProductDialog, setaddProductDialog] = useState(false)
   const [deleteConfirmDialog, setdeleteConfirmDialog] = useState(false)
   const [deleteorderid, setdeleteorderid] = useState(false)
   const [editobj, seteditobj] = useState(null)
-  const { orders, updateOrder, deleteOrder, updateOrderStatus } = useOrders()
-  const formatDate = (dateString) => {
-    const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }
-    return new Date(dateString).toLocaleString('zh-TW', options).replace(/\//g, '-').replace(/, /g, ' ')
-  }
+  const { orders, updateOrder, deleteOrder, updateOrderItem } = useOrders()
+
+  useEffect(() => {
+    axios
+      .get('/category/getAllCategory')
+      .then((res) => {
+        setcategorys(res.data)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch data:', error)
+      })
+    axios
+      .get('/product/getAllProduct')
+      .then((res) => {
+        setproducts(res.data)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch getAllProduct:', error)
+      })
+  }, [])
   const editmode = (order) => {
     seteditobj({ ...order })
   }
@@ -66,7 +77,7 @@ const Uncheck = ({ categorys, products }) => {
     setaddProductDialog(false)
   }
   const saveChange = () => {
-    updateOrder(editobj).then(() => {
+    updateOrderItem(editobj).then(() => {
       seteditobj(null)
     })
   }
@@ -88,19 +99,19 @@ const Uncheck = ({ categorys, products }) => {
     }
   })
   return (
-    <div className=" h-full px-6 pt-3.5">
-      <div className=" hide-scrollbar flex h-full w-full gap-3.5 overflow-x-auto ">
+    <div className=" hide-scrollbar h-full overflow-auto pt-3.5">
+      <div className=" flex h-full w-full gap-3.5  ">
         {orders
           .filter((x) => x.status === 0)
           .map((order) => (
             <div
               key={order.orderid}
-              className="flex flex-col rounded-default bg-gray-800 "
+              className="flex flex-col overflow-auto rounded-lg border-1 border-gray-600 bg-gray-800"
               style={{ minWidth: '375px' }}
             >
               <div className="p-4">
                 <div className="flex items-start justify-between">
-                  <span className="c3 rounded-lg bg-white bg-opacity-10 px-2 py-1 text-gray-400">
+                  <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
                     # {order.orderid.toString().padStart(6, '0')}
                   </span>
                   <div
@@ -130,7 +141,7 @@ const Uncheck = ({ categorys, products }) => {
                 <div className="c4 text-center text-gray-500">{formatDate(order.createtime)}</div>
               </div>
               {editobj?.orderid === order.orderid ? ( //編輯模式
-                <div className="flex h-full flex-col">
+                <div className="flex flex-1 flex-col overflow-auto ">
                   <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                     {editobj.item.map((x) => (
                       <div
@@ -183,7 +194,7 @@ const Uncheck = ({ categorys, products }) => {
                   <div className="w-full p-4 shadow-y">
                     <div className="flex gap-2">
                       <div
-                        className="grid place-items-center rounded-sm bg-rose-600 px-2.5 py-3"
+                        className="grid cursor-pointer place-items-center  rounded-default bg-rose-600 px-2.5 py-3"
                         onClick={() => {
                           setdeleteorderid(order.orderid)
                           setdeleteConfirmDialog(true)
@@ -191,25 +202,25 @@ const Uncheck = ({ categorys, products }) => {
                       >
                         <Image src={`/images/36x/Hero/trash.svg`} alt="plus" width={24} height={24} />
                       </div>
-                      <div className="c1 px-auto w-full rounded-sm border py-3.5 text-center" onClick={saveChange}>
+                      <div
+                        className="c1 px-auto  w-full cursor-pointer rounded-default border py-3.5 text-center"
+                        onClick={saveChange}
+                      >
                         儲存編輯
                       </div>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="flex h-full flex-col">
+                <div className="flex flex-1 flex-col overflow-auto">
                   <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                     {order.item.map((x) => (
-                      <div
-                        key={x}
-                        className=" c2  item grid cursor-pointer grid-cols-12 items-center   py-2 text-gray-400 "
-                      >
-                        <div className="col-start-1 col-end-5 text-nowrap">{x[2]}</div>
+                      <div key={x} className=" c2  flex items-center   py-2 text-gray-400 ">
+                        <div className="w-1/2">{x[2]}</div>
 
-                        <div className="col-start-7 col-end-8 ">{x[4]}</div>
+                        <div className="w-1/6 text-center">{x[4]}</div>
 
-                        <div className="col-start-10 col-end-13 text-end"> NT ${x[3] * x[4]}</div>
+                        <div className="w-1/3 text-end"> NT ${x[3] * x[4]}</div>
                       </div>
                     ))}
                   </div>
@@ -219,8 +230,13 @@ const Uncheck = ({ categorys, products }) => {
                   </div>
                   <div className="w-full p-4 shadow-y">
                     <div
-                      className="c1 px-auto w-full rounded-sm bg-orange-500 py-3.5 text-center text-white"
-                      onClick={() => updateOrderStatus(order.orderid, 1)}
+                      className="c1 px-auto w-full cursor-pointer rounded-default  bg-orange-500 py-3.5 text-center text-white"
+                      onClick={() =>
+                        updateOrder(order.orderid, [
+                          { column: 'status', value: 1 },
+                          { column: 'paymenttype', value: `'現金付款'` },
+                        ])
+                      }
                     >
                       訂單結帳
                     </div>
@@ -230,7 +246,7 @@ const Uncheck = ({ categorys, products }) => {
             </div>
           ))}
         <Dialog isOpen={addProductDialog} onClose={() => setaddProductDialog(false)}>
-          <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-6 py-3.5">
+          <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-6 py-3.5 ">
             <span>新增品項</span>
             <div className="grid place-items-center  " onClick={() => setaddProductDialog(false)}>
               <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
@@ -242,13 +258,13 @@ const Uncheck = ({ categorys, products }) => {
         </Dialog>
 
         <Dialog isOpen={deleteConfirmDialog} onClose={() => setdeleteConfirmDialog(false)}>
-          <div className="c2 flex justify-between rounded-t-default bg-gray-800 px-6 py-3.5">
+          <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
             <span>確認刪除</span>
             <div className="grid place-items-center  " onClick={() => setdeleteConfirmDialog(false)}>
               <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
-          <div className="c1 grid min-h-32 place-items-center p-6">
+          <div className="c1 grid min-h-32 place-items-center p-6 ">
             您是否要刪除訂單 <span className="text-rose-600">#{deleteorderid?.toString().padStart(6, '0')}</span>
           </div>
           <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
@@ -262,7 +278,7 @@ const Uncheck = ({ categorys, products }) => {
               取消
             </div>
             <div
-              className="w-full rounded-default  bg-orange-500 py-3.5 text-center"
+              className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
               onClick={() => {
                 deleteOrder(deleteorderid)
                 setdeleteConfirmDialog(false)

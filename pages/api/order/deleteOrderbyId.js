@@ -1,5 +1,5 @@
 import { db } from '../../../db.js'
-export default async function updateOrderbyId(req, res) {
+export default async function deleteOrderbyId(req, res) {
   try {
     if (req.method !== 'POST') {
       // 處理非 POST 請求

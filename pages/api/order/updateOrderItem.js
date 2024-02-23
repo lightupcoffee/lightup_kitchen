@@ -1,5 +1,5 @@
 import { db } from '../../../db.js'
-export default async function updateOrderbyId(req, res) {
+export default async function updateOrderItem(req, res) {
   try {
     if (req.method !== 'POST') {
       // 處理非 POST 請求
@@ -9,9 +9,13 @@ export default async function updateOrderbyId(req, res) {
 
     const client = await db.connect()
 
-    const { orderId, status } = req.body
+    const { order } = req.body
 
-    await client.query(`UPDATE lightup."Order" SET status=${status} WHERE orderid=${orderId} ; `)
+    client.query(
+      `UPDATE lightup."Order"
+    SET totalamount=${order.totalamount}, item='${JSON.stringify(order.item)}'
+    WHERE orderid=${order.orderid} ; `,
+    )
 
     client.release()
 

@@ -3,10 +3,12 @@ import Uncheck from './uncheck'
 import Making from './making'
 import { formatCurrency } from '../../utils/utils'
 import { useOrders } from '../../context/OrderContext'
-const Kitchen = ({ categorys, products }) => {
+
+const Kitchen = () => {
   const { orders } = useOrders()
 
   const [currentTime, setCurrentTime] = useState('')
+
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date()
@@ -42,8 +44,8 @@ const Kitchen = ({ categorys, products }) => {
   const [currentTab, setcurrentTab] = useState(0)
 
   return (
-    <div className="flex h-full flex-col  py-9">
-      <div className=" border-b-2 border-gray-700 px-6">
+    <div className="flex h-full flex-col px-8 py-9">
+      <div className=" border-b-2 border-gray-700 ">
         <div className="flex justify-between">
           <div className="h3"> 排隊訂單</div>
           <div className="c4 text-end text-gray-500">
@@ -68,10 +70,37 @@ const Kitchen = ({ categorys, products }) => {
           ))}
         </div>
       </div>
-      {currentTab == 0 && <Uncheck categorys={categorys} products={products}></Uncheck>}
+      {currentTab == 0 && <Uncheck></Uncheck>}
       {currentTab == 1 && <Making></Making>}
     </div>
   )
 }
+// export async function getStaticProps() {
+//   let categorys = []
+//   let products = []
+//   await axios
+//     .get('/category/getAllCategory')
+//     .then((res) => {
+//       categorys = res.data
+//     })
+//     .catch((error) => {
+//       console.error('Failed to fetch data:', error)
+//     })
+//   await axios
+//     .get('/product/getAllProduct')
+//     .then((res) => {
+//       products = res.data
+//     })
+//     .catch((error) => {
+//       console.error('Failed to fetch getAllProduct:', error)
+//     })
+//   return {
+//     props: {
+//       categorys: categorys,
+//       products: products,
+//     },
+//     revalidate: 10, // In seconds (optional, for incremental static regeneration)
+//   }
+// }
 
 export default Kitchen

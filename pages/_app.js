@@ -2,6 +2,7 @@
 import Head from 'next/head'
 import '../styles/globals.css' // 調整路徑以符合你的檔案結構
 import { OrderProvider } from '../context/OrderContext'
+import Layout from './components/Layout'
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps }) {
         />
       </Head>
       <OrderProvider>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </OrderProvider>
     </>
   )
