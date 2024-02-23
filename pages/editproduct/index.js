@@ -69,7 +69,10 @@ const EditProduct = () => {
                 {products
                   .filter((x) => x.categoryid === category.categoryid)
                   .map((product) => (
-                    <div className="flex items-center gap-4 rounded-default bg-gray-700 px-4 py-3 ring-2 ring-gray-600">
+                    <div
+                      key={product.productid}
+                      className="flex items-center gap-4 rounded-default bg-gray-700 px-4 py-3 ring-2 ring-gray-600"
+                    >
                       <Toggle />
                       <div>
                         <div className="c2">{product.name}</div>
