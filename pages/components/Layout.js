@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
     { page: '/editproduct', image: 'document-text' },
   ]
   return (
-    <div className="flex h-screen max-w-full">
+    <div className="flex h-dvh max-w-full">
       {/* Sidenav */}
       <div id="sidenav" className="flex w-16 shrink-0 flex-col justify-end gap-4 bg-gray-800 px-3 py-8">
         {sidebarpage.map((x) => (
