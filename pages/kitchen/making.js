@@ -1,5 +1,11 @@
+import { useState } from 'react'
+import Image from 'next/image'
+import Dialog from '../components/dialog'
 import { useOrders } from '../../context/OrderContext'
+import { formatDate } from '../../utils/utils'
 const Making = ({}) => {
+  const [completedOrderDialog, setcompletedOrderDialog] = useState(false)
+  const [completedOrderId, setcompletedOrderId] = useState(false)
   const { orders, updateOrderItem, updateOrder } = useOrders()
   const categorycolor = (item) => {
     const status = item[5]
@@ -23,17 +29,6 @@ const Making = ({}) => {
         break
     }
     return color
-  }
-  const formatDate = (dateString) => {
-    const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }
-    return new Date(dateString).toLocaleString('zh-TW', options).replace(/\//g, '-').replace(/, /g, ' ')
   }
 
   const changeItemStatus = (orderid, productid) => {
@@ -60,7 +55,7 @@ const Making = ({}) => {
                   </span>
                 </div>
                 <div className="h2 text-center">{order.tableid} 桌</div>
-                <div className="c4 text-center text-gray-500">{formatDate(order.createtime)}</div>
+                <div className="c4 text-center text-gray-500">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
               </div>
               <div className="hide-scrollbar flex h-full flex-1 flex-col gap-2.5 overflow-auto border border-y-1 border-gray-900 p-4">
                 {order.item.map((x) => (
@@ -81,7 +76,8 @@ const Making = ({}) => {
                 <div
                   className="c1 px-auto w-full cursor-pointer rounded-default bg-orange-500 p-3.5 text-center text-white"
                   onClick={() => {
-                    updateOrder(order.orderid, [{ columm: 'status', value: 2 }])
+                    setcompletedOrderId(order.orderid)
+                    setcompletedOrderDialog(true)
                   }}
                 >
                   <a>訂單完成</a>
@@ -90,6 +86,40 @@ const Making = ({}) => {
             </div>
           ))}
       </div>
+      <Dialog isOpen={completedOrderDialog} onClose={() => setcompletedOrderDialog(false)}>
+        <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
+          <span>確認完成</span>
+          <div className="grid place-items-center  " onClick={() => setcompletedOrderDialog(false)}>
+            <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
+          </div>
+        </div>
+        <div className="c1 grid min-h-32 place-items-center p-6 ">
+          您是否確認完成訂單
+          <span className="text-lightblue-600">#{completedOrderId?.toString().padStart(6, '0')}</span>
+        </div>
+        <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
+          <div
+            className="w-full rounded-default bg-gray-800 py-3.5 text-center"
+            onClick={() => {
+              setcompletedOrderDialog(false)
+              setcompletedOrderId(null)
+            }}
+          >
+            取消
+          </div>
+          <div
+            className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
+            onClick={() => {
+              updateOrder(completedOrderId, [{ column: 'status', value: 2 }]).then(() => {
+                setcompletedOrderDialog(false)
+                console.log(2)
+              })
+            }}
+          >
+            確認
+          </div>
+        </div>
+      </Dialog>
     </div>
   )
 }

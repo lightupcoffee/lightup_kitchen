@@ -20,11 +20,11 @@ export const OrderProvider = ({ children }) => {
   const fetchOrders = async () => {
     await axios
       .get('/order/getAllOrder')
-      .then((res) => {
+      .then(async (res) => {
         const orderlist = res.data.map((x) => {
           return { ...x, item: JSON.parse(x.item) }
         })
-        setOrders(orderlist)
+        await setOrders(orderlist)
       })
       .catch((error) => {
         console.error('Failed to fetch getAllOrder:', error)
@@ -41,8 +41,8 @@ export const OrderProvider = ({ children }) => {
         order: order,
       },
     })
-      .then((res) => {
-        fetchOrders()
+      .then(async (res) => {
+        await fetchOrders()
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -59,8 +59,8 @@ export const OrderProvider = ({ children }) => {
         id: orderId,
       },
     })
-      .then((res) => {
-        fetchOrders()
+      .then(async (res) => {
+        await fetchOrders()
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -74,12 +74,12 @@ export const OrderProvider = ({ children }) => {
       url: '/order/updateOrder',
       //API要求的資料
       data: {
-        orderId: orderId,
+        id: orderId,
         data: data,
       },
     })
-      .then((res) => {
-        fetchOrders()
+      .then(async (res) => {
+        await fetchOrders()
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)

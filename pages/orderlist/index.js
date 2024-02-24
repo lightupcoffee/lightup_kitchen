@@ -65,8 +65,10 @@ const OrderList = () => {
                   {order.paymenttype ?? '未付款'}
                 </span>
               </div>
-              <div className="w-1/4">{formatDate(order.createtime)}</div>
-              <div className="w-1/6">{!order.paymenttime ? '-' : formatDate(order.paymenttime)}</div>
+              <div className="w-1/4">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
+              <div className="w-1/6">
+                {!order.paymenttime ? '-' : formatDate(order.paymenttime, 'yyyy/MM/dd hh:mm')}
+              </div>
               <div className="w-1/12 ">
                 <div
                   className="float-end cursor-pointer rounded-sm border-2 border-gray-700 p-2"
@@ -88,19 +90,24 @@ const OrderList = () => {
         </div>
       </div>
       {orderdetailDialog && (
-        <Dialog isOpen={orderdetailDialog}>
+        <Dialog isOpen={orderdetailDialog} top={'50%'}>
           <div className="flex flex-col rounded-lg bg-gray-800 ">
             <div className="p-4">
               <div className="flex items-start justify-between">
                 <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
                   # {orderdetailobj.orderid.toString().padStart(6, '0')}
                 </span>
+                <span className={` rounded-xl px-2 py-1 ${paymenttypeColor(orderdetailobj.paymenttype)}`}>
+                  {orderdetailobj.paymenttype ?? '未付款'}
+                </span>
               </div>
               <div className="h2 text-center">{orderdetailobj.tableid} 桌</div>
-              <div className="c4 text-center text-gray-500">{formatDate(orderdetailobj.createtime)}</div>
+              <div className="c4 text-center text-gray-500">
+                {formatDate(orderdetailobj.createtime, 'yyyy/MM/dd hh:mm')}
+              </div>
             </div>
-            <div className="flex h-full flex-col">
-              <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
+            <div className="flex h-full  flex-col">
+              <div className="hide-scrollbar flex  min-h-64 flex-1  flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                 {orderdetailobj.item.map((x) => (
                   <div key={x} className=" c2  item  flex cursor-pointer  items-center   py-2 text-gray-400 ">
                     <div className="w-1/3 text-nowrap">{x[2]}</div>

@@ -1,22 +1,19 @@
 import React from 'react'
 import Image from 'next/image'
-import { formatCurrency, formatDate } from '../../utils/utils'
-import { useOrders } from '../../context/OrderContext'
 import { useState, useEffect } from 'react'
 import axios from '../../utils/axiosInstance'
 import Dialog from '../components/dialog'
 import Toggle from '../components/toggle'
 import Loading from '../components/loading'
 const EditProduct = () => {
-  const { orders } = useOrders()
   const [categorys, setcategorys] = useState([])
   const [products, setproducts] = useState([])
   const [isLoading, setisLoading] = useState(false)
   useEffect(() => {
-    // setisLoading(true)
+    setisLoading(true)
     getcategory()
     getproduct()
-    // setisLoading(false)
+    setisLoading(false)
   }, [])
 
   const getcategory = async () => {
@@ -40,9 +37,27 @@ const EditProduct = () => {
         console.error('Failed to fetch getAllProduct:', error)
       })
   }
+  const updateProduct = async (productid, data) => {
+    console.log('data: ', data)
+    await axios({
+      method: 'post',
+      url: '/product/updateProduct',
+      //API要求的資料
+      data: {
+        id: productid,
+        data: data,
+      },
+    })
+      .then((res) => {
+        getproduct()
+      })
+      .catch((error) => {
+        console.error('Failed to fetch data:', error)
+      })
+  }
   return (
     <div className="flex h-screen flex-col px-8 py-9">
-      {isLoading ? <Loading /> : <div>頁面內容</div>}
+      {isLoading && <Loading />}
       <div className="flex items-center gap-2">
         <div className="h3"> 編輯菜單</div>
         <div className="  cursor-pointer  rounded-sm border-2 border-gray-700  p-1 ">
@@ -73,7 +88,10 @@ const EditProduct = () => {
                       key={product.productid}
                       className="flex items-center gap-4 rounded-default bg-gray-700 px-4 py-3 ring-2 ring-gray-600"
                     >
-                      <Toggle />
+                      <Toggle
+                        value={product.active}
+                        onChage={(active) => updateProduct(product.productid, [{ column: 'active', value: active }])}
+                      />
                       <div>
                         <div className="c2">{product.name}</div>
                         <div className="c4">{product.description}</div>

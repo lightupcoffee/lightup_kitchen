@@ -9,14 +9,11 @@ export default async function updateOrder(req, res) {
 
     const client = await db.connect()
 
-    const { orderId, data } = req.body
-
-    const updatequery = data.map((x, index) => {
-      console.log('x', x)
+    const { id, data } = req.body
+    const updatequery = data.map((x) => {
       return `${x.column}=${x.value}`
     })
-    console.log('updatequery', updatequery.join(','))
-    await client.query(`UPDATE lightup."Order" SET ${updatequery.join(',')} WHERE orderid=${orderId} ; `)
+    await client.query(`UPDATE lightup."Order" SET ${updatequery.join(',')} WHERE orderid=${id} ; `)
 
     client.release()
 

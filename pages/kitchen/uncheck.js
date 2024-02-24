@@ -10,7 +10,9 @@ const Uncheck = () => {
   const [products, setproducts] = useState([])
   const [addProductDialog, setaddProductDialog] = useState(false)
   const [deleteConfirmDialog, setdeleteConfirmDialog] = useState(false)
-  const [deleteorderid, setdeleteorderid] = useState(false)
+  const [deleteOrderid, setdeleteOrderid] = useState(false)
+  const [checkoutConfirmDialog, setcheckoutConfirmDialog] = useState(false)
+  const [checkoutOrderid, setcheckoutOrderid] = useState(false)
   const [editobj, seteditobj] = useState(null)
   const { orders, updateOrder, deleteOrder, updateOrderItem } = useOrders()
 
@@ -138,7 +140,7 @@ const Uncheck = () => {
                   </div>
                 </div>
                 <div className="h2 text-center">{order.tableid} 桌</div>
-                <div className="c4 text-center text-gray-500">{formatDate(order.createtime)}</div>
+                <div className="c4 text-center text-gray-500">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
               </div>
               {editobj?.orderid === order.orderid ? ( //編輯模式
                 <div className="flex flex-1 flex-col overflow-auto ">
@@ -196,7 +198,7 @@ const Uncheck = () => {
                       <div
                         className="grid cursor-pointer place-items-center  rounded-default bg-rose-600 px-2.5 py-3"
                         onClick={() => {
-                          setdeleteorderid(order.orderid)
+                          setdeleteOrderid(order.orderid)
                           setdeleteConfirmDialog(true)
                         }}
                       >
@@ -231,12 +233,10 @@ const Uncheck = () => {
                   <div className="w-full p-4 shadow-y">
                     <div
                       className="c1 px-auto w-full cursor-pointer rounded-default  bg-orange-500 py-3.5 text-center text-white"
-                      onClick={() =>
-                        updateOrder(order.orderid, [
-                          { column: 'status', value: 1 },
-                          { column: 'paymenttype', value: `'現金付款'` },
-                        ])
-                      }
+                      onClick={() => {
+                        setcheckoutOrderid(order.orderid)
+                        setcheckoutConfirmDialog(true)
+                      }}
                     >
                       訂單結帳
                     </div>
@@ -265,14 +265,14 @@ const Uncheck = () => {
             </div>
           </div>
           <div className="c1 grid min-h-32 place-items-center p-6 ">
-            您是否要刪除訂單 <span className="text-rose-600">#{deleteorderid?.toString().padStart(6, '0')}</span>
+            您是否要刪除訂單 <span className="text-rose-600">#{deleteOrderid?.toString().padStart(6, '0')}</span>
           </div>
           <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
             <div
               className="w-full rounded-default bg-gray-800 py-3.5 text-center"
               onClick={() => {
                 setdeleteConfirmDialog(false)
-                setdeleteorderid(null)
+                setdeleteOrderid(null)
               }}
             >
               取消
@@ -280,8 +280,45 @@ const Uncheck = () => {
             <div
               className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
               onClick={() => {
-                deleteOrder(deleteorderid)
+                deleteOrder(deleteOrderid)
                 setdeleteConfirmDialog(false)
+              }}
+            >
+              確認
+            </div>
+          </div>
+        </Dialog>
+
+        <Dialog isOpen={checkoutConfirmDialog} onClose={() => setcheckoutConfirmDialog(false)}>
+          <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
+            <span>確認結帳</span>
+            <div className="grid place-items-center  " onClick={() => setcheckoutConfirmDialog(false)}>
+              <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
+            </div>
+          </div>
+          <div className="c1 grid min-h-32 place-items-center p-6 ">
+            您是否要結帳訂單 <span className="text-lightblue-600">#{checkoutOrderid?.toString().padStart(6, '0')}</span>
+          </div>
+          <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
+            <div
+              className="w-full rounded-default bg-gray-800 py-3.5 text-center"
+              onClick={() => {
+                setcheckoutConfirmDialog(false)
+                setcheckoutOrderid(null)
+              }}
+            >
+              取消
+            </div>
+            <div
+              className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
+              onClick={() => {
+                updateOrder(checkoutOrderid, [
+                  { column: 'status', value: 1 },
+                  { column: 'paymenttype', value: `'現金付款'` },
+                  { column: 'paymenttime', value: `NOW()` },
+                ]).then(() => {
+                  setcheckoutConfirmDialog(false)
+                })
               }}
             >
               確認

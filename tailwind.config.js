@@ -93,6 +93,9 @@ module.exports = {
         13: '13',
         14: '14',
       },
+      translate: {
+        4.5: '1.125rem',
+      },
     },
   },
   plugins: [],

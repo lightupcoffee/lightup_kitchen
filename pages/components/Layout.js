@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
       {/* Sidenav */}
       <div id="sidenav" className="flex w-16 shrink-0 flex-col justify-end gap-4 bg-gray-800 px-3 py-8">
         {sidebarpage.map((x) => (
-          <Link key={x.page} href={x.page}>
+          <Link key={x.page} href={x.page} prefetch={true}>
             <div
               className={`px-2 py-2 ${router.asPath === x.page ? 'rounded-xl bg-gray-700 opacity-100' : 'opacity-40'}`}
             >

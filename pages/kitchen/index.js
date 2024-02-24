@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Uncheck from './uncheck'
 import Making from './making'
-import { formatCurrency } from '../../utils/utils'
+import { formatCurrency, formatDate } from '../../utils/utils'
 import { useOrders } from '../../context/OrderContext'
-
 const Kitchen = () => {
   const { orders } = useOrders()
 
@@ -12,7 +11,7 @@ const Kitchen = () => {
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date()
-      const formattedDateTime = formatDateTime(now)
+      const formattedDateTime = formatDate(now, 'yyyy/MM/dd hh:mm:ss (W)')
       setCurrentTime(formattedDateTime)
     }
     updateDateTime()
@@ -22,18 +21,6 @@ const Kitchen = () => {
     return () => clearInterval(timerId)
   }, [])
 
-  // 定義格式化時間的函數
-  const formatDateTime = (date) => {
-    const year = date.getFullYear()
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day = date.getDate().toString().padStart(2, '0')
-    const hour = date.getHours().toString().padStart(2, '0')
-    const minute = date.getMinutes().toString().padStart(2, '0')
-    const second = date.getSeconds().toString().padStart(2, '0')
-    const weekDay = ['日', '一', '二', '三', '四', '五', '六'][date.getDay()]
-
-    return `${year}-${month}-${day} ${hour}:${minute}:${second} (${weekDay})`
-  }
   const [totalAmount, settotalAmount] = useState(0)
   useEffect(() => {
     const total = orders.reduce((a, b) => a + b.totalamount, 0)
