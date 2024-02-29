@@ -13,7 +13,7 @@ export default async function getAllOrderReportFile(req, res) {
 
     const today = new Date()
     const dateString = formatDate(today, 'yyyyMMdd')
-    console.log(dateString)
+
     const workbook = new ExcelJS.Workbook()
     const sheet = workbook.addWorksheet('訂單列表_' + dateString)
 
@@ -28,7 +28,10 @@ export default async function getAllOrderReportFile(req, res) {
 
     data.forEach((x) => {
       sheet.addRow({
-        createtime: formatDate(x.createtime, 'hh:mm'),
+        createtime: switchtimezoom(x.createtime, {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
         tableid: x.tableid,
         paymenttype: x.paymenttype,
         item: JSON.parse(x.item)
@@ -59,4 +62,13 @@ export default async function getAllOrderReportFile(req, res) {
     console.log(err)
     res.status(500).json({ error: err.message })
   }
+}
+
+function switchtimezoom(dateInput, formatOptions = {}, timeZone = 'Asia/Taipei') {
+  const formatter = new Intl.DateTimeFormat('zh-TW', {
+    ...formatOptions,
+    timeZone,
+    hour12: false,
+  })
+  return formatter.format(new Date(dateInput))
 }
