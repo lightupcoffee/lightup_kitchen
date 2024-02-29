@@ -93,7 +93,7 @@ const Uncheck = () => {
         productlist.length > 0
           ? productlist.map((p) => {
               return {
-                name: p.name,
+                name: p.name + (p.remark ? ` (${p.remark})` : ''),
                 value: p.productid,
               }
             })

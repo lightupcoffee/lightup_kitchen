@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import axios from '../../utils/axiosInstance'
 import { formatCurrency, formatDate } from '../../utils/utils'
 import { useOrders } from '../../context/OrderContext'
 import { useState, useEffect } from 'react'
@@ -26,12 +27,40 @@ const OrderList = () => {
     setorderdetailobj(null)
     setorderdetailDialog(false)
   }
+
+  const getOrderReportFile = () => {
+    axios({
+      url: '/order/getAllOrderReportFile', // API 的路徑
+      method: 'GET', // 或 'POST'，取決於你的實現
+      responseType: 'blob', // 重要：指示預期的響應數據類型為 Blob
+    })
+      .then((response) => {
+        // 創建一個 URL 並將其設置為 a 標簽的 href 屬性，然後模擬點擊來下載
+        const today = new Date()
+        const dateString = formatDate(today, 'yyyyMMdd')
+
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `訂單_${dateString}.xlsx`) // 指定下載的文件名
+        document.body.appendChild(link)
+        link.click()
+
+        // 下載後清理並釋放 URL 對象
+        link.parentNode.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      })
+      .catch((error) => console.error('Download error:', error))
+  }
   return (
     <div className="flex h-full flex-col px-8 py-9">
       <div className="flex h-full flex-col ">
         <div className="flex justify-between">
           <div className="h3"> 訂單紀錄</div>
-          <div className="c2 flex cursor-pointer items-center gap-1 rounded-sm border-2 border-gray-700 px-3 py-1 text-gray-200">
+          <div
+            onClick={getOrderReportFile}
+            className="c2 flex cursor-pointer items-center gap-1 rounded-sm border-2 border-gray-700 px-3 py-1 text-gray-200"
+          >
             <Image
               className="mx-auto"
               src={`/images/36x/Hero/arrow-down-tray.svg`} // 圖片的路徑

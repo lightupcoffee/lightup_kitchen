@@ -1,90 +1,114 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import Dialog from '../components/dialog'
 import { useOrders } from '../../context/OrderContext'
 import { formatDate } from '../../utils/utils'
-const Making = ({}) => {
+import axios from '../../utils/axiosInstance'
+
+// 將不依賴組件狀態的函數移出組件
+const getProductNamewithRemark = (item, products) => {
+  const remark = products.find((x) => x.productid == item[1])?.remark
+  return item[2] + (remark ? ` (${remark})` : '')
+}
+
+const categorycolor = (item) => {
+  const status = item[5]
+  if (status == 1) {
+    return 'bg-gray-800'
+  }
+
+  const categoryid = item[0]
+  let color = 'bg-lightblue-600'
+  switch (categoryid) {
+    case 1:
+    case 2:
+    case 3:
+      color = 'bg-lightblue-600'
+      break
+    case 4:
+      color = 'bg-emerald-500'
+      break
+    case 5:
+      color = 'bg-orange-600'
+      break
+  }
+  return color
+}
+
+const Making = () => {
   const [completedOrderDialog, setcompletedOrderDialog] = useState(false)
-  const [completedOrderId, setcompletedOrderId] = useState(false)
+  const [completedOrderId, setcompletedOrderId] = useState(null)
   const { orders, updateOrderItem, updateOrder } = useOrders()
-  const categorycolor = (item) => {
-    const status = item[5]
-    if (status == 1) {
-      return 'bg-gray-800'
-    }
+  const [products, setProducts] = useState([])
 
-    const categoryid = item[0]
-    let color = 'bg-lightblue-600'
-    switch (categoryid) {
-      case 1:
-      case 2:
-      case 3:
-        color = 'bg-lightblue-600'
-        break
-      case 4:
-        color = 'bg-emerald-500'
-        break
-      case 5:
-        color = 'bg-orange-600'
-        break
-    }
-    return color
-  }
+  useEffect(() => {
+    axios
+      .get('/product/getAllProduct')
+      .then((res) => {
+        setProducts(res.data)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch getAllProduct:', error)
+      })
+  }, [])
 
-  const changeItemStatus = (orderid, productid) => {
-    const obj = orders.find((x) => x.orderid === orderid)
-    const index = obj.item.findIndex((x) => x[1] === productid)
-    if (index == -1) {
-      return
-    }
-    obj.item[index][5] = obj.item[index][5] === 0 ? 1 : 0
-    updateOrderItem(obj)
-  }
+  const changeItemStatus = useCallback(
+    (orderid, productid) => {
+      const obj = orders.find((x) => x.orderid === orderid)
+      const index = obj.item.findIndex((x) => x[1] === productid)
+      if (index !== -1) {
+        obj.item[index][5] = obj.item[index][5] === 0 ? 1 : 0
+        updateOrderItem(obj)
+      }
+    },
+    [orders, updateOrderItem],
+  )
+
+  // 使用 useMemo 來避免不必要的重新計算
+  const activeOrders = useMemo(() => orders.filter((x) => x.status === 1), [orders])
 
   return (
     <div className=" hide-scrollbar h-full overflow-auto pt-3.5">
       <div className="  flex h-full w-full gap-3.5  ">
-        {orders
-          .filter((x) => x.status === 1)
-          .map((order) => (
-            <div key={order.orderid} className="flex  flex-col rounded-lg bg-gray-800 " style={{ minWidth: '375px' }}>
-              <div className="p-4">
-                <div>
-                  <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1">
-                    # {order.orderid.toString().padStart(6, '0')}
-                  </span>
-                </div>
-                <div className="h2 text-center">{order.tableid} 桌</div>
-                <div className="c4 text-center text-gray-500">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
+        {activeOrders.map((order) => (
+          <div key={order.orderid} className="flex  flex-col rounded-lg bg-gray-800 " style={{ minWidth: '375px' }}>
+            <div className="p-4">
+              <div>
+                <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1">
+                  # {order.orderid.toString().padStart(6, '0')}
+                </span>
               </div>
-              <div className="hide-scrollbar flex h-full flex-1 flex-col gap-2.5 overflow-auto border border-y-1 border-gray-900 p-4">
-                {order.item.map((x) => (
-                  <div
-                    key={x[2]}
-                    onClick={() => {
-                      changeItemStatus(order.orderid, x[1])
-                    }}
-                    className={`flex cursor-pointer items-center justify-between rounded-default p-3   shadow-lv2 ${x[5] === 0 ? 'bg-gray-600' : 'bg-gray-900 text-gray-600'}`}
-                  >
-                    <div className={`h-6 w-4 rounded-sm ${categorycolor(x)}`}></div>
-                    <div className="c1">{x[2]}</div>
-                    <div className="c2">x {x[4]}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="w-full p-4 shadow-y">
+              <div className="h2 text-center">{order.tableid} 桌</div>
+              <div className="c4 text-center text-gray-500">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
+            </div>
+            <div className="hide-scrollbar flex h-full flex-1 flex-col gap-2.5 overflow-auto border border-y-1 border-gray-900 p-4">
+              {order.item.map((x) => (
                 <div
-                  className="c1 px-auto w-full cursor-pointer rounded-default bg-orange-500 p-3.5 text-center text-white"
+                  key={x[2]}
                   onClick={() => {
-                    setcompletedOrderId(order.orderid)
-                    setcompletedOrderDialog(true)
+                    changeItemStatus(order.orderid, x[1])
                   }}
+                  className={`flex cursor-pointer items-center justify-between rounded-default p-3   shadow-lv2 ${x[5] === 0 ? 'bg-gray-600' : 'bg-gray-900 text-gray-600'}`}
                 >
-                  <a>訂單完成</a>
+                  <div className={`h-6 w-4 rounded-sm ${categorycolor(x)}`}></div>
+                  <div className="c1">{getProductNamewithRemark(x, products)} </div>
+                  <div className="c2">x {x[4]}</div>
                 </div>
+              ))}
+            </div>
+            <div className="w-full p-4 shadow-y">
+              <div
+                className="c1 px-auto w-full cursor-pointer rounded-default bg-orange-500 p-3.5 text-center text-white"
+                onClick={() => {
+                  setcompletedOrderId(order.orderid)
+                  setcompletedOrderDialog(true)
+                }}
+              >
+                <a>訂單完成</a>
               </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
       <Dialog isOpen={completedOrderDialog} onClose={() => setcompletedOrderDialog(false)}>
         <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">

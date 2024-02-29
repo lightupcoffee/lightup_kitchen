@@ -4,7 +4,7 @@ import { db } from '../../../db.js'
 export default async function getArticle(req, res) {
   try {
     const client = await db.connect()
-    const result = await client.query('SELECT * FROM lightup."Product" order by name ')
+    const result = await client.query('SELECT * FROM lightup."Product" order by sort ')
     res.status(200).json(result.rows)
     client.release()
   } catch (err) {

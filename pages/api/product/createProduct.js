@@ -7,16 +7,15 @@ export default async function createProduct(req, res) {
     }
 
     const client = await db.connect()
-    const product = res.data
+    const product = req.body
     const query = `INSERT INTO lightup."Product"(
-          productid, name, description, price, category)
-          VALUES (${product.productid}, ${product.name}, ${product.description}, ${product.price}, ${product.category});`
+          productid, name, description, price, categoryid,active,sort)
+          VALUES (${product.productid}, '${product.name}', '${product.description}', ${product.price}, ${product.categoryid},${product.active},${product.sort});`
     const result = await client.query(query)
-    console.log('createProduct', result)
-    // res.status(200).json(result.rows);
+
     client.release()
 
-    return res.status(200).json({ success: true, data: result.rows })
+    return res.status(200).json({ success: true })
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: err.message })

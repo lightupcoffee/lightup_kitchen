@@ -10,7 +10,6 @@ export default async function updateProduct(req, res) {
     const client = await db.connect()
 
     const { id, data } = req.body
-    console.log('indata', data)
     const updatequery = data.map((x) => {
       return `${x.column}=${x.value}`
     })

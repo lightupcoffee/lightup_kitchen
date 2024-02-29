@@ -7,7 +7,7 @@ const Dialog = ({ isOpen, onClose, children, top }) => {
   return (
     <div className="fixed inset-0 z-50  flex  justify-center bg-orange-500 bg-opacity-30 pt-10">
       <div
-        className="absolute  w-full max-w-2xl rounded-lg bg-gray-900  "
+        className="absolute  w-full max-w-xl rounded-lg bg-gray-900  "
         style={{ top: top ? top : '33%', transform: 'translateY(-50%)' }}
       >
         {children}

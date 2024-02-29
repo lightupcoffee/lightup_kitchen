@@ -11,7 +11,7 @@ export default async function deleteOrderbyId(req, res) {
 
     const { id } = req.body
 
-    await client.query(`delete from lightup."Order" WHERE orderid=${id} ; `)
+    await client.query(`Update lightup."Order" set status=-1 WHERE orderid=${id} ; `)
 
     client.release()
 

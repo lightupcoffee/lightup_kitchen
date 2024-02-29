@@ -12,12 +12,12 @@ const Dropdown = ({ option, onSelect }) => {
         {option?.subitem && <Image src={`/images/36x/Hero/chevron-down.svg`} alt="close" width={18} height={18} />}
       </div>
       {isOpen && (
-        <div className="absolute mt-2   w-full  rounded-default bg-gray-800">
+        <div className="absolute mt-2  w-full max-w-64  rounded-default bg-gray-800 ">
           {option &&
             option.map((option) => (
               <div
                 key={option.value}
-                className=" relative flex w-full cursor-pointer justify-between  px-3 py-4 first:rounded-t-default last:rounded-b-default hover:bg-gray-700"
+                className=" relative flex  w-full max-w-64 cursor-pointer justify-between   px-3 py-4 first:rounded-t-default last:rounded-b-default hover:bg-gray-700"
                 onClick={() => {
                   setopenOption(option.value)
                 }}
@@ -25,7 +25,7 @@ const Dropdown = ({ option, onSelect }) => {
                 <span> {option.name}</span>
                 <Image src={`/images/36x/Hero/chevron-right.svg`} alt="close" width={18} height={18} />
                 {openOption && openOption === option.value && option.subitem && (
-                  <div className="absolute left-full top-0  ml-2 mt-0 w-full  rounded-default border  bg-gray-800">
+                  <div className="hide-scrollbar absolute left-full top-0 ml-2 mt-0 max-h-64 w-full overflow-auto  rounded-default border  bg-gray-800">
                     {option.subitem &&
                       option.subitem.map((subitem) => (
                         <div

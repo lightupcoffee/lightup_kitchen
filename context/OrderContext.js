@@ -1,35 +1,68 @@
 // OrderContext.js
+// OrderContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from '../utils/axiosInstance'
+
 const OrderContext = createContext()
 
 export const useOrders = () => useContext(OrderContext)
 
 export const OrderProvider = ({ children }) => {
   const [orders, setOrders] = useState([])
+  const [orderExist, setOrderExist] = useState([])
 
-  // 定時更新訂單數據
+  // 封装获取订单的逻辑
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get('/order/getAllOrder')
+      const orderlist = response.data.map((x) => ({
+        ...x,
+        item: JSON.parse(x.item),
+      }))
+      return orderlist // 直接返回订单列表
+    } catch (error) {
+      console.error('Failed to fetch orders:', error)
+      return [] // 错误处理
+    }
+  }
+
+  const handleNewOrders = (newOrders) => {
+    const newOrderIds = newOrders.map((order) => order.orderid)
+    // 检查是否有新订单
+    setOrderExist((prevOrderExist) => {
+      const hasNewOrders = newOrderIds.some((orderid) => !prevOrderExist.includes(orderid))
+      if (hasNewOrders) {
+        playNotificationSound()
+        return newOrderIds
+      } else {
+        return prevOrderExist
+      }
+    })
+    setOrders(newOrders) // 更新订单状态
+  }
+
+  // 播放新订单音效
+  const playNotificationSound = () => {
+    const audio = new Audio('/sounds/neworder.wav')
+    audio.play().catch((error) => console.error('播放音效失败:', error))
+  }
+
   useEffect(() => {
-    fetchOrders()
+    const fetchData = async () => {
+      const newOrders = await fetchOrders()
+      handleNewOrders(newOrders)
+    }
+
+    // 首次加载时获取数据
+    fetchData()
+
+    // 定时获取订单数据
     const interval = setInterval(() => {
-      fetchOrders()
+      fetchData()
     }, 15000) // 每15秒更新一次
 
     return () => clearInterval(interval)
   }, [])
-  const fetchOrders = async () => {
-    await axios
-      .get('/order/getAllOrder')
-      .then(async (res) => {
-        const orderlist = res.data.map((x) => {
-          return { ...x, item: JSON.parse(x.item) }
-        })
-        await setOrders(orderlist)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch getAllOrder:', error)
-      })
-  }
 
   // 更新訂單內容
   const updateOrderItem = async (order) => {
@@ -42,7 +75,8 @@ export const OrderProvider = ({ children }) => {
       },
     })
       .then(async (res) => {
-        await fetchOrders()
+        const newOrders = await fetchOrders()
+        handleNewOrders(newOrders)
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -60,7 +94,8 @@ export const OrderProvider = ({ children }) => {
       },
     })
       .then(async (res) => {
-        await fetchOrders()
+        const newOrders = await fetchOrders()
+        handleNewOrders(newOrders)
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -79,7 +114,8 @@ export const OrderProvider = ({ children }) => {
       },
     })
       .then(async (res) => {
-        await fetchOrders()
+        const newOrders = await fetchOrders()
+        handleNewOrders(newOrders)
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
