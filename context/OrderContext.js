@@ -14,7 +14,7 @@ export const OrderProvider = ({ children }) => {
   // 封装获取订单的逻辑
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('/order/getAllOrder')
+      const response = await axios.get('/order/getTodayOrder')
       const orderlist = response.data.map((x) => ({
         ...x,
         item: JSON.parse(x.item),

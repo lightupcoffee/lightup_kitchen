@@ -1,10 +1,12 @@
 // pages/api/data.js
 import { db } from '../../../db.js'
 
-export default async function getAllOrder(req, res) {
+export default async function getTodayOrder(req, res) {
   try {
     const client = await db.connect()
-    const result = await client.query('SELECT * FROM lightup."Order" order by orderid ')
+    const result = await client.query(
+      'SELECT * FROM lightup."Order"  where createtime::date = CURRENT_DATE order by orderid ',
+    )
     res.status(200).json(result.rows)
     client.release()
   } catch (err) {
