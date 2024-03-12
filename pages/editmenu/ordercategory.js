@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import axios from '../../utils/axiosInstance'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 const OrderCategory = ({ initcategory, onClose, update }) => {
-  const [categorys, setCategorys] = useState(initcategory)
+  const [categorys, setCategorys] = useState(initcategory || [])
   const [sortchange, setSortchange] = useState(false)
-  const initsort = JSON.stringify(initcategory.map((x) => x.categoryid))
+  const initsort = useMemo(() => {
+    // 確保 initcategory 不是 undefined，如果是，則使用空數組作為默認值
+    const safeInitCategory = initcategory || []
+    return JSON.stringify(safeInitCategory.map((x) => x.categoryid))
+  }, [initcategory])
 
   useEffect(() => {
     setSortchange(JSON.stringify(categorys.map((x) => x.categoryid)) !== initsort)
-  }, [categorys])
+  }, [categorys, initsort])
 
   const updateProductSort = async () => {
     try {
@@ -56,29 +60,30 @@ const OrderCategory = ({ initcategory, onClose, update }) => {
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className="rounded-lg  bg-gray-800 pb-4">
                 <div className="hide-scrollbar flex  min-h-80 flex-col gap-2.5 overflow-auto p-4 pb-0">
-                  {categorys.map((category, index) => (
-                    <Draggable key={category.categoryid} draggableId={category.categoryid.toString()} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className={`flex items-center gap-2 rounded-default  bg-gray-700 px-4 py-3 shadow-lv2 ring-2 ring-gray-600 `}
-                        >
-                          <div>
-                            <Image
-                              className="mx-auto"
-                              src={`/images/36x/Hero/bars-3.svg`} // 圖片的路徑
-                              alt="bars-3" // 圖片描述
-                              width={18} // 圖片的寬度
-                              height={18} // 圖片的高度
-                            />
+                  {categorys &&
+                    categorys.map((category, index) => (
+                      <Draggable key={category.categoryid} draggableId={category.categoryid.toString()} index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={`flex items-center gap-2 rounded-default  bg-gray-700 px-4 py-3 shadow-lv2 ring-2 ring-gray-600 `}
+                          >
+                            <div>
+                              <Image
+                                className="mx-auto"
+                                src={`/images/36x/Hero/bars-3.svg`} // 圖片的路徑
+                                alt="bars-3" // 圖片描述
+                                width={18} // 圖片的寬度
+                                height={18} // 圖片的高度
+                              />
+                            </div>
+                            <div className="c2">{category.name}</div>
                           </div>
-                          <div className="c2">{category.name}</div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
+                        )}
+                      </Draggable>
+                    ))}
                   {provided.placeholder}
                 </div>
               </div>

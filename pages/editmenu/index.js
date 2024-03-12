@@ -275,14 +275,15 @@ const EditMenu = () => {
           ></EditCategory>
         </Dialog>
       )}
-
-      <Dialog isOpen={orderCategoryDialog} top="15%">
-        <OrderCategory
-          initcategory={categorys}
-          onClose={() => setOrderCategoryDialog(false)}
-          update={() => getCategory()}
-        ></OrderCategory>
-      </Dialog>
+      {orderCategoryDialog && (
+        <Dialog isOpen={orderCategoryDialog} top="15%">
+          <OrderCategory
+            initcategory={categorys}
+            onClose={() => setOrderCategoryDialog(false)}
+            update={() => getCategory()}
+          ></OrderCategory>
+        </Dialog>
+      )}
     </div>
   )
 }
