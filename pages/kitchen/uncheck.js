@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { useOrders } from '../../context/OrderContext'
 import Dialog from '../components/dialog'
+import Input from '../components/input'
 import Dropdown from '../components/dropdown'
 import axios from '../../utils/axiosInstance'
 const Uncheck = () => {
@@ -14,6 +15,9 @@ const Uncheck = () => {
   const [checkoutConfirmDialog, setcheckoutConfirmDialog] = useState(false)
   const [checkoutOrderid, setcheckoutOrderid] = useState(false)
   const [editobj, seteditobj] = useState(null)
+  const [discountDialog, setDiscountDialog] = useState(false)
+  const [editDiscount, setEditDiscount] = useState(0)
+  const [editDiscountError, setEditDiscountError] = useState(false)
   const { orders, updateOrder, deleteOrder, updateOrderItem } = useOrders()
 
   useEffect(() => {
@@ -56,7 +60,7 @@ const Uncheck = () => {
     if (product[4] <= 0) {
       obj.item.splice(index, 1)
     }
-    obj.totalamount = obj.item.reduce((a, b) => a + b[3] * b[4], 0)
+    obj.totalamount = obj.item.reduce((a, b) => a + b[3] * b[4], 0) - obj.discount
     seteditobj(obj)
   }
 
@@ -74,7 +78,7 @@ const Uncheck = () => {
       obj.item[index][4] += 1
     }
 
-    obj.totalamount = obj.item.reduce((a, b) => a + b[3] * b[4], 0)
+    obj.totalamount = obj.item.reduce((a, b) => a + b[3] * b[4], 0) - obj.discount
     seteditobj(obj)
     setaddProductDialog(false)
   }
@@ -100,6 +104,27 @@ const Uncheck = () => {
           : null,
     }
   })
+
+  const openEditDiscountDialog = () => {
+    setEditDiscount(editobj.discount || 0)
+    setDiscountDialog(true)
+  }
+  const handleDiscountChange = (value) => {
+    if (value > editobj.totalamount) {
+      value = editobj.totalamount
+    }
+    setEditDiscount(value)
+  }
+  const saveDiscount = () => {
+    const total = editobj.item.reduce((a, b) => a + b[3] * b[4], 0) - editDiscount
+    seteditobj((prev) => ({
+      ...prev,
+      discount: editDiscount,
+      totalamount: total,
+    }))
+    setDiscountDialog(false)
+  }
+
   return (
     <div className=" hide-scrollbar h-full overflow-auto pt-3.5">
       <div className=" flex h-full w-full gap-3.5  ">
@@ -109,7 +134,7 @@ const Uncheck = () => {
             <div
               key={order.orderid}
               className="flex flex-col overflow-auto rounded-lg border-1 border-gray-600 bg-gray-800"
-              style={{ minWidth: '375px' }}
+              style={{ width: '375px' }}
             >
               <div className="p-4">
                 <div className="flex items-start justify-between">
@@ -148,7 +173,7 @@ const Uncheck = () => {
                     {editobj.item.map((x) => (
                       <div
                         key={x}
-                        className=" c2  item grid cursor-pointer grid-cols-12 items-center   py-4 text-gray-400 "
+                        className=" c2  item grid cursor-pointer grid-cols-12 items-center py-2 text-gray-400 "
                       >
                         <div className="col-start-1 col-end-5 text-nowrap">{x[2]}</div>
 
@@ -189,9 +214,27 @@ const Uncheck = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h3 flex w-full justify-between px-12 pb-6 pt-3 shadow-y">
-                    <div>Total</div>
-                    <div>NT ${formatCurrency(editobj.totalamount)}</div>
+                  <div className="  w-full  px-6 pb-6 pt-3 shadow-y">
+                    <div className="c3 flex w-full justify-between text-gray-500 ">
+                      <div>Discount</div>
+                      <div className="flex gap-2">
+                        {' '}
+                        <span>-{formatCurrency(editobj.discount)}</span>
+                        <div onClick={() => openEditDiscountDialog()}>
+                          <Image
+                            className="image-filter mx-auto"
+                            src={`/images/36x/Hero/pencil.svg`}
+                            alt="plus"
+                            width={14}
+                            height={14}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="h3 flex w-full justify-between ">
+                      <div>Total</div>
+                      <div>NT ${formatCurrency(editobj.totalamount)} </div>
+                    </div>
                   </div>
                   <div className="w-full p-4 shadow-y">
                     <div className="flex gap-2">
@@ -217,7 +260,7 @@ const Uncheck = () => {
                 <div className="flex flex-1 flex-col overflow-auto">
                   <div className="hide-scrollbar flex  flex-1   flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                     {order.item.map((x) => (
-                      <div key={x} className=" c2  flex items-center   py-2 text-gray-400 ">
+                      <div key={x} className=" c2  flex items-center py-2 text-gray-400 ">
                         <div className="w-1/2">{x[2]}</div>
 
                         <div className="w-1/6 text-center">{x[4]}</div>
@@ -320,6 +363,45 @@ const Uncheck = () => {
                   setcheckoutConfirmDialog(false)
                 })
               }}
+            >
+              確認
+            </div>
+          </div>
+        </Dialog>
+
+        <Dialog isOpen={discountDialog} onClose={() => setDiscountDialog(false)}>
+          <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
+            <span>新增折扣</span>
+            <div className="grid place-items-center  " onClick={() => setDiscountDialog(false)}>
+              <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
+            </div>
+          </div>
+          <div className="p-6">
+            <Input
+              label="金額"
+              // required
+              // addError={() => setEditDiscountError(true)}
+              // removeError={() => setEditDiscountError(false)}
+              // helpText="請輸入金額"
+              prefix="$"
+              value={editDiscount}
+              onChange={(val) => handleDiscountChange(val)}
+              type="number"
+              //min={0}
+            />
+          </div>
+          <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
+            <div
+              className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
+              onClick={() => {
+                setDiscountDialog(false)
+              }}
+            >
+              取消
+            </div>
+            <div
+              className={`w-full cursor-pointer  rounded-default  py-3.5 text-center ${editDiscountError ? 'bg-gray-900 text-gray-700 ring-2 ring-gray-800' : 'bg-orange-500'} `}
+              onClick={() => saveDiscount()}
             >
               確認
             </div>

@@ -35,7 +35,7 @@ const Input = ({
         removeError()
       }
     }
-  }, [value, required, addError, removeError])
+  }, [value])
 
   const handleInputChange = (event) => {
     let val = event.target.value
