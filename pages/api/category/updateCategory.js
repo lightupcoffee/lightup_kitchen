@@ -1,5 +1,5 @@
 import { db } from '../../../db.js'
-export default async function updateProduct(req, res) {
+export default async function updateCategory(req, res) {
   try {
     if (req.method !== 'POST') {
       res.setHeader('Allow', ['POST'])
@@ -14,7 +14,7 @@ export default async function updateProduct(req, res) {
 
     values.push(id)
 
-    const queryText = `UPDATE lightup."Product" SET ${updates.join(', ')} WHERE productid=$${updates.length + 1};`
+    const queryText = `UPDATE lightup."Category" SET ${updates.join(', ')} WHERE categoryid=$${updates.length + 1};`
 
     await client.query(queryText, values)
     client.release()

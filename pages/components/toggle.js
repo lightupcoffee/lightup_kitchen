@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Toggle = ({ value, onChage }) => {
+const Toggle = ({ value, onChange }) => {
   Toggle.propTypes = {
     value: PropTypes.bool.isRequired,
     onChage: PropTypes.func,
@@ -12,8 +12,8 @@ const Toggle = ({ value, onChage }) => {
     <div className="flex items-center justify-center ">
       {/* Toggle container */}
       <div
-        className={`flex h-5 w-10 cursor-pointer items-center rounded-full  ${value === true ? 'bg-orange-600' : 'bg-gray-400'} p-1`}
-        onClick={() => onChage(!value)}
+        className={`flex h-5 w-10 cursor-pointer items-center rounded-full  ${value === true ? 'bg-orange-600' : 'bg-gray-700 ring-1 ring-gray-600'} p-1`}
+        onClick={() => onChange(!value)}
       >
         {/* Toggle circle */}
         <div

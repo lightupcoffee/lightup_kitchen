@@ -64,15 +64,18 @@ module.exports = {
         sm: '0.875rem', //14px
       },
       padding: {
+        5.5: '1.375rem',
         7.5: '1.875rem',
         9.5: '2.375rem',
         18: '4.5rem',
       },
       space: {
+        5.5: '1.375rem',
         7.5: '1.875rem',
         9.5: '2.375rem',
       },
       gap: {
+        5.5: '1.375rem',
         7.5: '1.875rem',
       },
       boxShadow: {

@@ -8,6 +8,7 @@ import Dialog from '../components/dialog'
 const OrderList = () => {
   const [orderdetailDialog, setorderdetailDialog] = useState(false)
   const [orderdetailobj, setorderdetailobj] = useState(null)
+  const [removeOrderDialog, setRemoveOrderDialog] = useState(false)
   const { orders } = useOrders()
   const paymenttypeColor = (type) => {
     switch (type) {
@@ -52,74 +53,114 @@ const OrderList = () => {
       })
       .catch((error) => console.error('Download error:', error))
   }
+
+  const removeOrder = () => {
+    axios({
+      method: 'post',
+      url: '/order/deleteAllOrder',
+    })
+      .then(async (res) => {
+        setRemoveOrderDialog(false)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch data:', error)
+      })
+  }
   return (
     <div className="flex h-full flex-col px-8 py-9">
       <div className="flex h-full flex-col ">
-        <div className="flex justify-between">
+        <div className="mb-3 flex items-center gap-2">
           <div className="h3"> 訂單紀錄</div>
           <div
+            onClick={() => setRemoveOrderDialog(true)}
+            className=" flex cursor-pointer items-center rounded-sm border-2 border-gray-700 px-1 py-1 text-gray-200"
+          >
+            <Image
+              className="mx-auto"
+              src={`/images/36x/Hero/trash.svg`} // 圖片的路徑
+              alt="trash" // 圖片描述
+              width={18} // 圖片的寬度
+              height={18} // 圖片的高度
+            />
+          </div>
+          <div
             onClick={getOrderReportFile}
-            className="c2 flex cursor-pointer items-center gap-1 rounded-sm border-2 border-gray-700 px-3 py-1 text-gray-200"
+            className="c2 ml-auto flex cursor-pointer items-center gap-1 rounded-sm border-2 border-gray-700 px-3 py-1 text-gray-200"
           >
             <Image
               className="mx-auto"
               src={`/images/36x/Hero/arrow-down-tray.svg`} // 圖片的路徑
-              alt="arrow-down" // 圖片描述
+              alt="arrow-down-tray" // 圖片描述
               width={18} // 圖片的寬度
               height={18} // 圖片的高度
             />
             下載
           </div>
         </div>
-        <div className="mb-2 mt-3 flex justify-between px-4 text-sm text-gray-400">
-          <div className="w-1/6">訂單編號</div>
-          <div className="w-1/12">桌號</div>
-          <div className="w-1/6">訂單收入</div>
-          <div className="w-1/6">付款方式</div>
-          <div className="w-1/4">接單時間</div>
-          <div className="w-1/6">結帳時間</div>
-          <div className="w-1/12"></div>
-        </div>
-        <div className="hide-scrollbar flex-1 overflow-auto ">
-          {orders.map((order) => (
-            <div
-              key={order.orderid}
-              className="c3 mt-3 flex items-center justify-between rounded-sm  border-1 border-gray-600 bg-gray-800 px-4 py-3 text-gray-400 first:mt-0"
-            >
-              <div className="w-1/6 "># {order.orderid.toString().padStart(6, '0')}</div>
-              <div className="w-1/12">{order.tableid.padStart(2, '0')}</div>
-              <div className="w-1/6">NT ${formatCurrency(order.totalamount)}</div>
-              <div className="w-1/6">
-                <span className={` rounded-xl px-2 py-1 ${paymenttypeColor(order.paymenttype)}`}>
-                  {order.paymenttype ?? '未付款'}
-                </span>
-              </div>
-              <div className="w-1/4">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
-              <div className="w-1/6">
-                {!order.paymenttime ? '-' : formatDate(order.paymenttime, 'yyyy/MM/dd hh:mm')}
-              </div>
-              <div className="w-1/12 ">
-                <div
-                  className="float-end cursor-pointer rounded-sm border-2 border-gray-700 p-2"
-                  onClick={() => {
-                    openOrderDetail(order)
-                  }}
-                >
-                  <Image
-                    className=""
-                    src={`/images/36x/clipboard-list.svg`} // 圖片的路徑
-                    alt="detail" // 圖片描述
-                    width={18} // 圖片的寬度
-                    height={18} // 圖片的高度
-                  />
-                </div>
-              </div>
+        {orders.length > 0 ? (
+          <div className="flex h-full flex-col ">
+            <div className="mb-2 flex justify-between px-4 text-sm text-gray-400">
+              <div className="w-1/6">訂單編號</div>
+              <div className="w-1/12">桌號</div>
+              <div className="w-1/6">訂單收入</div>
+              <div className="w-1/6">付款方式</div>
+              <div className="w-1/4">接單時間</div>
+              <div className="w-1/6">結帳時間</div>
+              <div className="w-1/12"></div>
             </div>
-          ))}
-        </div>
+            <div className="hide-scrollbar flex-1 overflow-auto ">
+              {orders.map((order) => (
+                <div
+                  key={order.orderid}
+                  className="c3 mt-3 flex items-center justify-between rounded-sm  border-1 border-gray-600 bg-gray-800 px-4 py-3 text-gray-400 first:mt-0"
+                >
+                  <div className="w-1/6 "># {order.orderid.toString().padStart(6, '0')}</div>
+                  <div className="w-1/12">{order.tableid.padStart(2, '0')}</div>
+                  <div className="w-1/6">NT ${formatCurrency(order.totalamount)}</div>
+                  <div className="w-1/6">
+                    <span className={` rounded-xl px-2 py-1 ${paymenttypeColor(order.paymenttype)}`}>
+                      {order.paymenttype ?? '未付款'}
+                    </span>
+                  </div>
+                  <div className="w-1/4">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
+                  <div className="w-1/6">
+                    {!order.paymenttime ? '-' : formatDate(order.paymenttime, 'yyyy/MM/dd hh:mm')}
+                  </div>
+                  <div className="w-1/12 ">
+                    <div
+                      className="float-end cursor-pointer rounded-sm border-2 border-gray-700 p-2"
+                      onClick={() => {
+                        openOrderDetail(order)
+                      }}
+                    >
+                      <Image
+                        className=""
+                        src={`/images/36x/clipboard-list.svg`} // 圖片的路徑
+                        alt="detail" // 圖片描述
+                        width={18} // 圖片的寬度
+                        height={18} // 圖片的高度
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="w-full rounded-sm bg-gray-800 p-8 text-center ring-1 ring-gray-600">
+            <Image
+              className="mx-auto"
+              src={`/images/App/emptyimage.svg`} // 圖片的路徑
+              alt="emptyimage" // 圖片描述
+              width={168} // 圖片的寬度
+              height={104} // 圖片的高度
+            />
+            <div className="c2 mt-6">目前無訂單，又是嶄新的一天!</div>
+          </div>
+        )}
       </div>
       {orderdetailDialog && (
-        <Dialog isOpen={orderdetailDialog} top={'50%'}>
+        <Dialog isOpen={orderdetailDialog} top={'20%'}>
           <div className="flex flex-col rounded-lg bg-gray-800 ">
             <div className="p-4">
               <div className="flex items-start justify-between">
@@ -153,7 +194,7 @@ const OrderList = () => {
               </div>
               <div className="w-full p-4 shadow-y">
                 <div
-                  className="c1 px-auto w-full cursor-pointer rounded-default bg-gray-500 py-3.5 text-center text-white"
+                  className="c1 px-auto w-full cursor-pointer rounded-default bg-orange-500 py-3.5 text-center text-white"
                   onClick={() => closeOrderDetail()}
                 >
                   關閉
@@ -163,6 +204,34 @@ const OrderList = () => {
           </div>
         </Dialog>
       )}
+
+      <Dialog isOpen={removeOrderDialog} onClose={() => setRemoveOrderDialog(false)}>
+        <div className="p-6 text-center">
+          <div className="">
+            <Image className="mx-auto" src={`/images/App/dangericon.svg`} alt="dangericon" width={50} height={50} />
+          </div>
+
+          <div className="c1 pt-4">確定清空所有訂單資料?</div>
+        </div>
+        <div className="c1 flex w-full  gap-2 border-t-1 p-4 ">
+          <div
+            className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
+            onClick={() => {
+              setRemoveOrderDialog(false)
+            }}
+          >
+            取消
+          </div>
+          <div
+            className="w-full cursor-pointer  rounded-default bg-rose-500 py-3.5 text-center "
+            onClick={() => {
+              removeOrder()
+            }}
+          >
+            確認
+          </div>
+        </div>
+      </Dialog>
     </div>
   )
 }

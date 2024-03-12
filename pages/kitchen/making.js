@@ -6,9 +6,9 @@ import { formatDate } from '../../utils/utils'
 import axios from '../../utils/axiosInstance'
 
 // 將不依賴組件狀態的函數移出組件
-const getProductNamewithRemark = (item, products) => {
+const getProductRemark = (item, products) => {
   const remark = products.find((x) => x.productid == item[1])?.remark
-  return item[2] + (remark ? ` (${remark})` : '')
+  return remark ? ` (${remark})` : ''
 }
 
 const categorycolor = (item) => {
@@ -88,11 +88,13 @@ const Making = () => {
                   onClick={() => {
                     changeItemStatus(order.orderid, x[1])
                   }}
-                  className={`flex cursor-pointer items-center justify-between rounded-default p-3   shadow-lv2 ${x[5] === 0 ? 'bg-gray-600' : 'bg-gray-900 text-gray-600'}`}
+                  className={`flex cursor-pointer items-center justify-between rounded-default p-3   shadow-lv2 ${x[5] === 0 ? 'bg-gray-700' : 'bg-gray-900 text-gray-600'}`}
                 >
                   <div className={`h-6 w-4 rounded-sm ${categorycolor(x)}`}></div>
-                  <div className="c1">{getProductNamewithRemark(x, products)} </div>
-                  <div className="c2">x {x[4]}</div>
+                  <div className="c1">
+                    {x[2]} <span className="c3 text-gray-400">{getProductRemark(x, products)}</span>{' '}
+                  </div>
+                  <div className="c2 text-gray-400">x {x[4]}</div>
                 </div>
               ))}
             </div>
@@ -136,7 +138,6 @@ const Making = () => {
             onClick={() => {
               updateOrder(completedOrderId, [{ column: 'status', value: 2 }]).then(() => {
                 setcompletedOrderDialog(false)
-                console.log(2)
               })
             }}
           >

@@ -269,7 +269,7 @@ const Uncheck = () => {
           </div>
           <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
             <div
-              className="w-full rounded-default bg-gray-800 py-3.5 text-center"
+              className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
               onClick={() => {
                 setdeleteConfirmDialog(false)
                 setdeleteOrderid(null)
@@ -301,7 +301,7 @@ const Uncheck = () => {
           </div>
           <div className="c2 flex w-full gap-2 border-t-1 p-4 ">
             <div
-              className="w-full rounded-default bg-gray-800 py-3.5 text-center"
+              className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
               onClick={() => {
                 setcheckoutConfirmDialog(false)
                 setcheckoutOrderid(null)
@@ -314,8 +314,8 @@ const Uncheck = () => {
               onClick={() => {
                 updateOrder(checkoutOrderid, [
                   { column: 'status', value: 1 },
-                  { column: 'paymenttype', value: `'現金付款'` },
-                  { column: 'paymenttime', value: `NOW()` },
+                  { column: 'paymenttype', value: '現金付款' },
+                  { column: 'paymenttime', value: 'NOW()' },
                 ]).then(() => {
                   setcheckoutConfirmDialog(false)
                 })

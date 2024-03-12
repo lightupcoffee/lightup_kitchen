@@ -1,5 +1,5 @@
 import { db } from '../../../db.js'
-export default async function deleteOrderbyId(req, res) {
+export default async function deleteAllOrder(req, res) {
   try {
     if (req.method !== 'POST') {
       // 處理非 POST 請求
@@ -11,7 +11,7 @@ export default async function deleteOrderbyId(req, res) {
 
     const { id } = req.body
 
-    await client.query(`delete from lightup."Order" WHERE orderid=${id} ; `)
+    await client.query(`truncate table  lightup."Order"; `)
 
     client.release()
 

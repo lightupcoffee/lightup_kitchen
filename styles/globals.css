@@ -17,6 +17,17 @@ html body {
   position: fixed;
 }
 
+@layer base {
+  input {
+    outline: 0;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
