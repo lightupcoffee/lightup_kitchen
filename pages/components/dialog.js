@@ -12,7 +12,7 @@ const Dialog = ({ isOpen, onClose, children, top, width }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-orange-500 bg-opacity-30 pt-10">
-      <div className={`absolute max-w-xl rounded-lg bg-gray-900 ${width ? '' : 'w-full'}`} style={dialogStyle}>
+      <div className={`absolute w-full max-w-xl rounded-lg bg-gray-900`} style={dialogStyle}>
         {children}
       </div>
     </div>

@@ -70,7 +70,7 @@ const OrderList = () => {
     <div className="flex h-full flex-col px-8 py-9">
       <div className="flex h-full flex-col ">
         <div className="mb-3 flex items-center gap-2">
-          <div className="h3"> 訂單紀錄</div>
+          <div className="h3"> 訂單記錄</div>
           <div
             onClick={() => setRemoveOrderDialog(true)}
             className=" flex cursor-pointer items-center rounded-sm border-2 border-gray-700 px-1 py-1 text-gray-200"
@@ -160,7 +160,7 @@ const OrderList = () => {
         )}
       </div>
       {orderdetailDialog && (
-        <Dialog isOpen={orderdetailDialog} top={'20%'}>
+        <Dialog isOpen={orderdetailDialog} top={'15%'}>
           <div className="flex flex-col rounded-lg bg-gray-800 ">
             <div className="p-4">
               <div className="flex items-start justify-between">
@@ -176,7 +176,7 @@ const OrderList = () => {
                 {formatDate(orderdetailobj.createtime, 'yyyy/MM/dd hh:mm')}
               </div>
             </div>
-            <div className="flex h-full  flex-col">
+            <div className="flex h-full  flex-col" style={{ maxHeight: '60vh' }}>
               <div className="hide-scrollbar flex  min-h-64 flex-1  flex-col divide-y divide-gray-700 overflow-auto border-y-1 border-gray-700 px-6 py-2">
                 {orderdetailobj.item.map((x) => (
                   <div key={x} className=" c2  item  flex cursor-pointer  items-center   py-2 text-gray-400 ">
@@ -188,9 +188,17 @@ const OrderList = () => {
                   </div>
                 ))}
               </div>
-              <div className="h3 flex w-full justify-between px-6 pb-6 pt-3 shadow-y">
-                <div>Total</div>
-                <div>NT ${formatCurrency(orderdetailobj.totalamount)}</div>
+              <div className="  w-full  px-6 pb-6 pt-3 shadow-y">
+                <div className="c3 flex w-full justify-between text-gray-500 ">
+                  <div>Discount</div>
+                  <div className="flex gap-2">
+                    <span>-{formatCurrency(orderdetailobj.discount)}</span>
+                  </div>
+                </div>
+                <div className="h3 flex w-full justify-between ">
+                  <div>Total</div>
+                  <div>NT ${formatCurrency(orderdetailobj.totalamount)} </div>
+                </div>
               </div>
               <div className="w-full p-4 shadow-y">
                 <div

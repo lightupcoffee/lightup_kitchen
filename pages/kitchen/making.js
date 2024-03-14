@@ -88,7 +88,7 @@ const Making = () => {
                   onClick={() => {
                     changeItemStatus(order.orderid, x[1])
                   }}
-                  className={`flex cursor-pointer items-center justify-between rounded-default p-3   shadow-lv2 ${x[5] === 0 ? 'bg-gray-700' : 'bg-gray-900 text-gray-600'}`}
+                  className={`flex cursor-pointer items-center justify-between rounded-default p-3    ${x[5] === 0 ? 'bg-gray-700 shadow-lv2' : 'bg-gray-900 text-gray-600'}`}
                 >
                   <div className={`h-6 w-4 rounded-sm ${categorycolor(x)}`}></div>
                   <div className="c1">
@@ -115,7 +115,7 @@ const Making = () => {
       <Dialog isOpen={completedOrderDialog} onClose={() => setcompletedOrderDialog(false)}>
         <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
           <span>確認完成</span>
-          <div className="grid place-items-center  " onClick={() => setcompletedOrderDialog(false)}>
+          <div className="grid cursor-pointer place-items-center" onClick={() => setcompletedOrderDialog(false)}>
             <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
           </div>
         </div>

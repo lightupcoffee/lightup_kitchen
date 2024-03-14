@@ -4,39 +4,46 @@ import { useState, useEffect } from 'react'
 import { useOrders } from '../../context/OrderContext'
 import Dialog from '../components/dialog'
 import Input from '../components/input'
-import Dropdown from '../components/dropdown'
 import axios from '../../utils/axiosInstance'
 const Uncheck = () => {
-  const [categorys, setcategorys] = useState([])
-  const [products, setproducts] = useState([])
-  const [addProductDialog, setaddProductDialog] = useState(false)
-  const [deleteConfirmDialog, setdeleteConfirmDialog] = useState(false)
+  const [categorys, setCategorys] = useState([])
+  const [products, setProducts] = useState([])
+  const [addProductCategory, setaddProductCategory] = useState(null)
+  const [addProductOption, setaddProductOption] = useState([])
+  const [addProductItem, setaddProductItem] = useState(null)
+  const [addProductValue, setaddProductValue] = useState(1)
   const [deleteOrderid, setdeleteOrderid] = useState(false)
-  const [checkoutConfirmDialog, setcheckoutConfirmDialog] = useState(false)
   const [checkoutOrderid, setcheckoutOrderid] = useState(false)
   const [editobj, seteditobj] = useState(null)
-  const [discountDialog, setDiscountDialog] = useState(false)
   const [editDiscount, setEditDiscount] = useState(0)
-  const [editDiscountError, setEditDiscountError] = useState(false)
   const { orders, updateOrder, deleteOrder, updateOrderItem } = useOrders()
 
+  const [dialogStates, setDialogStates] = useState({
+    addProductDialog: false,
+    deleteConfirmDialog: false,
+    checkoutConfirmDialog: false,
+    discountDialog: false,
+  })
+  // 對話框開關控制
+  const toggleDialog = (dialogName, isOpen) => {
+    setDialogStates((prevStates) => ({ ...prevStates, [dialogName]: isOpen }))
+  }
+
+  // 資料加載
   useEffect(() => {
-    axios
-      .get('/category/getAllCategory')
-      .then((res) => {
-        setcategorys(res.data)
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const [categoryRes, productRes] = await Promise.all([
+          axios.get('/category/getAllCategory'),
+          axios.get('/product/getAllProduct'),
+        ])
+        setCategorys(categoryRes.data)
+        setProducts(productRes.data)
+      } catch (error) {
         console.error('Failed to fetch data:', error)
-      })
-    axios
-      .get('/product/getAllProduct')
-      .then((res) => {
-        setproducts(res.data)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch getAllProduct:', error)
-      })
+      }
+    }
+    fetchData()
   }, [])
   const editmode = (order) => {
     seteditobj({ ...order })
@@ -64,8 +71,9 @@ const Uncheck = () => {
     seteditobj(obj)
   }
 
-  const additem = (value) => {
+  const additem = () => {
     const obj = { ...editobj }
+    const value = addProductItem
     const product = products.find((x) => x.productid === value)
     if (!product) {
       console.log('product not found')
@@ -73,19 +81,34 @@ const Uncheck = () => {
     }
     const index = obj.item.findIndex((x) => x[1] == value)
     if (index === -1) {
-      obj.item.push([product.categoryid, product.productid, product.name, product.price, 1, 0])
+      obj.item.push([product.categoryid, product.productid, product.name, product.price, addProductValue, 0])
     } else {
-      obj.item[index][4] += 1
+      obj.item[index][4] += addProductValue
     }
 
     obj.totalamount = obj.item.reduce((a, b) => a + b[3] * b[4], 0) - obj.discount
     seteditobj(obj)
-    setaddProductDialog(false)
+    setaddProductValue(1)
+    toggleDialog('addProductDialog', false)
   }
   const saveChange = () => {
     updateOrderItem(editobj).then(() => {
       seteditobj(null)
     })
+  }
+
+  const openaddProductDialog = () => {
+    const firstcategory = categorys[0]?.categoryid || 1
+    setaddProductCategory(firstcategory)
+    addProductCategoryClick(firstcategory)
+    setaddProductValue(1)
+    toggleDialog('addProductDialog', true)
+  }
+  const addProductCategoryClick = (id) => {
+    setaddProductCategory(id)
+    const productlist = products.filter((x) => x.categoryid === id)
+    setaddProductOption(productlist)
+    setaddProductItem(productlist[0]?.productid)
   }
   //新增產品的下拉選單資料
   const productoption = categorys?.map((c) => {
@@ -107,7 +130,7 @@ const Uncheck = () => {
 
   const openEditDiscountDialog = () => {
     setEditDiscount(editobj.discount || 0)
-    setDiscountDialog(true)
+    toggleDialog('discountDialog', true)
   }
   const handleDiscountChange = (value) => {
     if (value > editobj.totalamount) {
@@ -122,7 +145,7 @@ const Uncheck = () => {
       discount: editDiscount,
       totalamount: total,
     }))
-    setDiscountDialog(false)
+    toggleDialog('discountDialog', false)
   }
 
   return (
@@ -201,7 +224,7 @@ const Uncheck = () => {
                     ))}
                     <div className="  py-2">
                       <div
-                        onClick={() => setaddProductDialog(true)}
+                        onClick={() => openaddProductDialog()}
                         className="c2 grid w-full place-items-center rounded-default border-2 border-dashed border-gray-500 bg-gray-700 py-1.5 text-center "
                       >
                         <Image
@@ -218,7 +241,6 @@ const Uncheck = () => {
                     <div className="c3 flex w-full justify-between text-gray-500 ">
                       <div>Discount</div>
                       <div className="flex gap-2">
-                        {' '}
                         <span>-{formatCurrency(editobj.discount)}</span>
                         <div onClick={() => openEditDiscountDialog()}>
                           <Image
@@ -242,7 +264,7 @@ const Uncheck = () => {
                         className="grid cursor-pointer place-items-center  rounded-default bg-rose-600 px-2.5 py-3"
                         onClick={() => {
                           setdeleteOrderid(order.orderid)
-                          setdeleteConfirmDialog(true)
+                          toggleDialog('deleteConfirmDialog', true)
                         }}
                       >
                         <Image src={`/images/36x/Hero/trash.svg`} alt="plus" width={24} height={24} />
@@ -278,7 +300,7 @@ const Uncheck = () => {
                       className="c1 px-auto w-full cursor-pointer rounded-default  bg-orange-500 py-3.5 text-center text-white"
                       onClick={() => {
                         setcheckoutOrderid(order.orderid)
-                        setcheckoutConfirmDialog(true)
+                        toggleDialog('checkoutConfirmDialog', true)
                       }}
                     >
                       訂單結帳
@@ -288,22 +310,94 @@ const Uncheck = () => {
               )}
             </div>
           ))}
-        <Dialog isOpen={addProductDialog} onClose={() => setaddProductDialog(false)}>
+        <Dialog
+          isOpen={dialogStates.addProductDialog}
+          onClose={() => toggleDialog('addProductDialog', false)}
+          top={'20%'}
+        >
           <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-6 py-3.5 ">
-            <span>新增品項</span>
-            <div className="grid place-items-center  " onClick={() => setaddProductDialog(false)}>
+            <span>新增至訂單</span>
+            <div
+              className="grid cursor-pointer place-items-center "
+              onClick={() => toggleDialog('addProductDialog', false)}
+            >
               <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
           <div className="p-6">
-            <Dropdown option={productoption} onSelect={additem} />
+            <div className="c3 mb-1 text-gray-400">菜單品項</div>
+            <div className="flex gap-4">
+              <div className="hide-scrollbar h-72 w-full overflow-auto rounded-default bg-gray-800  py-2">
+                {categorys.map((c) => (
+                  <div
+                    key={c.categoryid}
+                    className={`relative flex w-full max-w-64 cursor-pointer px-2 `}
+                    onClick={() => {
+                      addProductCategoryClick(c.categoryid)
+                    }}
+                  >
+                    <div
+                      className={`flex w-full justify-between py-4 ${addProductCategory === c.categoryid ? 'rounded-default bg-gray-700 px-2' : ''}`}
+                    >
+                      <span> {c.name}</span>
+                      <Image src={`/images/36x/Hero/chevron-right.svg`} alt="close" width={18} height={18} />
+                    </div>
+                  </div>
+                ))}
+              </div>{' '}
+              <div className="hide-scrollbar h-72 w-full overflow-auto rounded-default bg-gray-800 py-2">
+                {addProductOption.map((p) => (
+                  <div
+                    key={p.productid}
+                    className={`relative flex w-full max-w-64 cursor-pointer px-2 `}
+                    onClick={() => {
+                      setaddProductItem(p.productid)
+                    }}
+                  >
+                    <div
+                      className={`flex w-full justify-between py-4 ${addProductItem === p.productid ? 'rounded-default bg-orange-500 px-2' : ''}`}
+                    >
+                      <span> {`${p.name + (p.remark ? ` (${p.remark})` : '')}`}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="c2 flex w-full items-center gap-8 border-t-1 px-6 py-4 ">
+            <div className="flex grow-0 items-center gap-3">
+              <a
+                className="cursor-pointer rounded-sm bg-gray-800 p-2 ring-2 ring-gray-700"
+                onClick={() => (addProductValue > 1 ? setaddProductValue(addProductValue - 1) : '')}
+              >
+                {' '}
+                <Image src={`/images/36x/Hero/minus.svg`} alt="minus" width={18} height={18} />
+              </a>
+              <div className="c1 w-8 text-center">{addProductValue}</div>
+              <a
+                className="cursor-pointer rounded-sm bg-gray-800 p-2 ring-2 ring-gray-700"
+                onClick={() => setaddProductValue(addProductValue + 1)}
+              >
+                {' '}
+                <Image src={`/images/36x/Hero/plus.svg`} alt="plus" width={18} height={18} />
+              </a>
+            </div>
+            <div
+              className=" grow cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center"
+              onClick={() => additem()}
+            >
+              新增項目
+            </div>
           </div>
         </Dialog>
 
-        <Dialog isOpen={deleteConfirmDialog} onClose={() => setdeleteConfirmDialog(false)}>
+        <Dialog isOpen={dialogStates.deleteConfirmDialog} onClose={() => toggleDialog('deleteConfirmDialog', false)}>
           <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
             <span>確認刪除</span>
-            <div className="grid place-items-center  " onClick={() => setdeleteConfirmDialog(false)}>
+            <div
+              className="grid cursor-pointer place-items-center "
+              onClick={() => toggleDialog('deleteConfirmDialog', false)}
+            >
               <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
@@ -314,7 +408,7 @@ const Uncheck = () => {
             <div
               className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
               onClick={() => {
-                setdeleteConfirmDialog(false)
+                toggleDialog('deleteConfirmDialog', false)
                 setdeleteOrderid(null)
               }}
             >
@@ -324,7 +418,7 @@ const Uncheck = () => {
               className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
               onClick={() => {
                 deleteOrder(deleteOrderid)
-                setdeleteConfirmDialog(false)
+                toggleDialog('deleteConfirmDialog', false)
               }}
             >
               確認
@@ -332,10 +426,16 @@ const Uncheck = () => {
           </div>
         </Dialog>
 
-        <Dialog isOpen={checkoutConfirmDialog} onClose={() => setcheckoutConfirmDialog(false)}>
+        <Dialog
+          isOpen={dialogStates.checkoutConfirmDialog}
+          onClose={() => toggleDialog('checkoutConfirmDialog', false)}
+        >
           <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
             <span>確認結帳</span>
-            <div className="grid place-items-center  " onClick={() => setcheckoutConfirmDialog(false)}>
+            <div
+              className="grid cursor-pointer place-items-center "
+              onClick={() => toggleDialog('checkoutConfirmDialog', false)}
+            >
               <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
@@ -346,7 +446,7 @@ const Uncheck = () => {
             <div
               className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
               onClick={() => {
-                setcheckoutConfirmDialog(false)
+                toggleDialog('checkoutConfirmDialog', false)
                 setcheckoutOrderid(null)
               }}
             >
@@ -360,7 +460,7 @@ const Uncheck = () => {
                   { column: 'paymenttype', value: '現金付款' },
                   { column: 'paymenttime', value: 'NOW()' },
                 ]).then(() => {
-                  setcheckoutConfirmDialog(false)
+                  toggleDialog('checkoutConfirmDialog', false)
                 })
               }}
             >
@@ -369,10 +469,13 @@ const Uncheck = () => {
           </div>
         </Dialog>
 
-        <Dialog isOpen={discountDialog} onClose={() => setDiscountDialog(false)}>
+        <Dialog isOpen={dialogStates.discountDialog} onClose={() => toggleDialog('discountDialog', false)}>
           <div className="c2 flex cursor-pointer justify-between rounded-t-default  bg-gray-800 px-6 py-3.5">
             <span>新增折扣</span>
-            <div className="grid place-items-center  " onClick={() => setDiscountDialog(false)}>
+            <div
+              className="grid cursor-pointer  place-items-center"
+              onClick={() => toggleDialog('discountDialog', false)}
+            >
               <Image src={`/images/36x/Hero/x-mark.svg`} alt="close" width={18} height={18} />
             </div>
           </div>
@@ -394,13 +497,13 @@ const Uncheck = () => {
             <div
               className="w-full cursor-pointer rounded-default bg-gray-800 py-3.5 text-center "
               onClick={() => {
-                setDiscountDialog(false)
+                toggleDialog('discountDialog', false)
               }}
             >
               取消
             </div>
             <div
-              className={`w-full cursor-pointer  rounded-default  py-3.5 text-center ${editDiscountError ? 'bg-gray-900 text-gray-700 ring-2 ring-gray-800' : 'bg-orange-500'} `}
+              className={`w-full cursor-pointer  rounded-default  bg-orange-500 py-3.5 text-center `}
               onClick={() => saveDiscount()}
             >
               確認

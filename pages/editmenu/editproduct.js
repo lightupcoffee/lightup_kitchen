@@ -173,14 +173,14 @@ const EditProduct = ({ mode, initproduct, onClose, update }) => {
         </div>
       </div>
 
-      <Dialog isOpen={deleteProdcutDialog} onClose={() => setDeleteProdcutDialog(false)} top={'50%'} width={'w-96'}>
+      <Dialog isOpen={deleteProdcutDialog} onClose={() => setDeleteProdcutDialog(false)} width={'20%'}>
         <div className="p-6 text-center">
           <div className="">
             <Image className="mx-auto" src={`/images/App/dangericon.svg`} alt="dangericon" width={50} height={50} />
           </div>
 
           <div className="c1 pt-4">
-            確定刪除 <span className="text-rose-500">{product.name}</span>
+            確定刪除 <span className="text-rose-500">{product.name} </span>?
           </div>
         </div>
         <div className="c1 flex w-full  gap-2 border-t-1 p-4 ">
