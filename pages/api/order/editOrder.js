@@ -1,6 +1,6 @@
 import { db } from '../../../db.js'
 
-export default async function updateOrder(req, res) {
+export default async function editOrder(req, res) {
   try {
     if (req.method !== 'POST') {
       // 处理非 POST 请求

@@ -11,6 +11,11 @@ export const OrderProvider = ({ children }) => {
   const [orders, setOrders] = useState([])
   const [orderExist, setOrderExist] = useState([])
 
+  const updateOrderList = async () => {
+    const newOrders = await fetchOrders()
+    handleNewOrders(newOrders)
+  }
+
   // 封装获取订单的逻辑
   const fetchOrders = async () => {
     try {
@@ -49,8 +54,7 @@ export const OrderProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const newOrders = await fetchOrders()
-      handleNewOrders(newOrders)
+      await updateOrderList()
     }
 
     // 首次加载时获取数据
@@ -65,18 +69,17 @@ export const OrderProvider = ({ children }) => {
   }, [])
 
   // 更新訂單內容
-  const updateOrderItem = async (order) => {
+  const editOrderItem = async (order) => {
     await axios({
       method: 'post',
-      url: '/order/updateOrderItem',
+      url: '/order/editOrderItem',
       //API要求的資料
       data: {
         order: order,
       },
     })
       .then(async (res) => {
-        const newOrders = await fetchOrders()
-        handleNewOrders(newOrders)
+        await updateOrderList()
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -94,8 +97,7 @@ export const OrderProvider = ({ children }) => {
       },
     })
       .then(async (res) => {
-        const newOrders = await fetchOrders()
-        handleNewOrders(newOrders)
+        await updateOrderList()
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -103,10 +105,10 @@ export const OrderProvider = ({ children }) => {
   }
 
   // 變更訂單狀態
-  const updateOrder = async (orderId, data) => {
+  const editOrder = async (orderId, data) => {
     await axios({
       method: 'post',
-      url: '/order/updateOrder',
+      url: '/order/editOrder',
       //API要求的資料
       data: {
         id: orderId,
@@ -114,8 +116,7 @@ export const OrderProvider = ({ children }) => {
       },
     })
       .then(async (res) => {
-        const newOrders = await fetchOrders()
-        handleNewOrders(newOrders)
+        await updateOrderList()
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -126,9 +127,10 @@ export const OrderProvider = ({ children }) => {
     <OrderContext.Provider
       value={{
         orders,
-        updateOrderItem,
+        editOrderItem,
         deleteOrder,
-        updateOrder,
+        editOrder,
+        updateOrderList,
       }}
     >
       {children}

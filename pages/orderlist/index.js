@@ -9,7 +9,7 @@ const OrderList = () => {
   const [orderdetailDialog, setorderdetailDialog] = useState(false)
   const [orderdetailobj, setorderdetailobj] = useState(null)
   const [removeOrderDialog, setRemoveOrderDialog] = useState(false)
-  const { orders } = useOrders()
+  const { orders, updateOrderList } = useOrders()
   const paymenttypeColor = (type) => {
     switch (type) {
       case '現金付款':
@@ -50,6 +50,7 @@ const OrderList = () => {
         // 下載後清理並釋放 URL 對象
         link.parentNode.removeChild(link)
         window.URL.revokeObjectURL(url)
+        setRemoveOrderDialog(true)
       })
       .catch((error) => console.error('Download error:', error))
   }
@@ -60,6 +61,7 @@ const OrderList = () => {
       url: '/order/deleteAllOrder',
     })
       .then(async (res) => {
+        await updateOrderList()
         setRemoveOrderDialog(false)
       })
       .catch((error) => {

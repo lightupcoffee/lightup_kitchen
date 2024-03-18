@@ -16,7 +16,7 @@ const Uncheck = () => {
   const [checkoutOrderid, setcheckoutOrderid] = useState(false)
   const [editobj, seteditobj] = useState(null)
   const [editDiscount, setEditDiscount] = useState(0)
-  const { orders, updateOrder, deleteOrder, updateOrderItem } = useOrders()
+  const { orders, editOrder, deleteOrder, editOrderItem } = useOrders()
 
   const [dialogStates, setDialogStates] = useState({
     addProductDialog: false,
@@ -38,7 +38,7 @@ const Uncheck = () => {
           axios.get('/product/getAllProduct'),
         ])
         setCategorys(categoryRes.data)
-        setProducts(productRes.data)
+        setProducts(productRes.data.filter((x) => x.active === true))
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }
@@ -92,7 +92,7 @@ const Uncheck = () => {
     toggleDialog('addProductDialog', false)
   }
   const saveChange = () => {
-    updateOrderItem(editobj).then(() => {
+    editOrderItem(editobj).then(() => {
       seteditobj(null)
     })
   }
@@ -314,6 +314,7 @@ const Uncheck = () => {
           isOpen={dialogStates.addProductDialog}
           onClose={() => toggleDialog('addProductDialog', false)}
           top={'20%'}
+          width={'50%'}
         >
           <div className="c2 flex justify-between rounded-t-lg bg-gray-800 px-6 py-3.5 ">
             <span>新增至訂單</span>
@@ -455,7 +456,7 @@ const Uncheck = () => {
             <div
               className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
               onClick={() => {
-                updateOrder(checkoutOrderid, [
+                editOrder(checkoutOrderid, [
                   { column: 'status', value: 1 },
                   { column: 'paymenttype', value: '現金付款' },
                   { column: 'paymenttime', value: 'NOW()' },

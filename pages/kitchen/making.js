@@ -38,7 +38,7 @@ const categorycolor = (item) => {
 const Making = () => {
   const [completedOrderDialog, setcompletedOrderDialog] = useState(false)
   const [completedOrderId, setcompletedOrderId] = useState(null)
-  const { orders, updateOrderItem, updateOrder } = useOrders()
+  const { orders, editOrderItem, editOrder } = useOrders()
   const [products, setProducts] = useState([])
 
   useEffect(() => {
@@ -58,10 +58,10 @@ const Making = () => {
       const index = obj.item.findIndex((x) => x[1] === productid)
       if (index !== -1) {
         obj.item[index][5] = obj.item[index][5] === 0 ? 1 : 0
-        updateOrderItem(obj)
+        editOrderItem(obj)
       }
     },
-    [orders, updateOrderItem],
+    [orders, editOrderItem],
   )
 
   // 使用 useMemo 來避免不必要的重新計算
@@ -136,7 +136,7 @@ const Making = () => {
           <div
             className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
             onClick={() => {
-              updateOrder(completedOrderId, [{ column: 'status', value: 2 }]).then(() => {
+              editOrder(completedOrderId, [{ column: 'status', value: 2 }]).then(() => {
                 setcompletedOrderDialog(false)
               })
             }}

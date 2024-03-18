@@ -7,7 +7,7 @@ const Dialog = ({ isOpen, onClose, children, top, width }) => {
   const dialogStyle = {
     top: top || '30%',
     //marginTop: top ? `-${top / 2}px` : '-15%', // 這裡假設你的彈出框高度約為 30% 的視窗高度
-    width: width || '50%',
+    width: width || '375px',
   }
 
   return (

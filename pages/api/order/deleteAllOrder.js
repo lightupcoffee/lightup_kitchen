@@ -11,7 +11,7 @@ export default async function deleteAllOrder(req, res) {
 
     const { id } = req.body
 
-    await client.query(`truncate table  lightup."Order"; `)
+    await client.query(`truncate table  lightup."Order" RESTART IDENTITY; `)
 
     client.release()
 
