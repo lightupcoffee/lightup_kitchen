@@ -20,10 +20,10 @@ const Layout = ({ children }) => {
               >
                 <Image
                   className="mx-auto"
-                  src={`/images/36x/Hero/${x.image}.svg`} // 圖片的路徑
-                  alt="document-text" // 圖片描述
-                  width={32} // 圖片的寬度
-                  height={32} // 圖片的高度
+                  src={`/images/36x/Hero/${x.image}.svg`}
+                  alt="document-text"
+                  width={32}
+                  height={32}
                 />
               </div>
             </Link>

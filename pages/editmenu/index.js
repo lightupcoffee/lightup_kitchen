@@ -154,13 +154,7 @@ const EditMenu = () => {
       <div className="flex items-center gap-2">
         <div className="h3"> 編輯菜單</div>
         <div className="  cursor-pointer  rounded-sm border-2 border-gray-700  p-1 " onClick={() => createcategory()}>
-          <Image
-            className="mx-auto"
-            src={`/images/36x/Hero/plus.svg`} // 圖片的路徑
-            alt="Add Category" // 圖片描述
-            width={18} // 圖片的寬度
-            height={18} // 圖片的高度
-          />
+          <Image className="mx-auto" src={`/images/36x/Hero/plus.svg`} alt="Add Category" width={18} height={18} />
         </div>
         <div
           onClick={() => setOrderCategoryDialog(true)}
@@ -168,10 +162,10 @@ const EditMenu = () => {
         >
           <Image
             className="mx-auto"
-            src={`/images/36x/Hero/arrow-right-left.svg`} // 圖片的路徑
-            alt="arrow-right-left" // 圖片描述
-            width={18} // 圖片的寬度
-            height={18} // 圖片的高度
+            src={`/images/36x/Hero/arrow-right-left.svg`}
+            alt="arrow-right-left"
+            width={18}
+            height={18}
           />
           群組排序
         </div>
@@ -223,10 +217,10 @@ const EditMenu = () => {
                               <div className="ml-auto p-2.5" onClick={() => editproduct(product)}>
                                 <Image
                                   className="mx-auto"
-                                  src={`/images/36x/Hero/pencil.svg`} // 圖片的路徑
-                                  alt="Edit" // 圖片描述
-                                  width={18} // 圖片的寬度
-                                  height={18} // 圖片的高度
+                                  src={`/images/36x/Hero/pencil.svg`}
+                                  alt="Edit"
+                                  width={18}
+                                  height={18}
                                 />
                               </div>
                             </div>

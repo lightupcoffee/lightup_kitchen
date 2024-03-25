@@ -77,13 +77,7 @@ const OrderList = () => {
             onClick={() => setRemoveOrderDialog(true)}
             className=" flex cursor-pointer items-center rounded-sm border-2 border-gray-700 px-1 py-1 text-gray-200"
           >
-            <Image
-              className="mx-auto"
-              src={`/images/36x/Hero/trash.svg`} // 圖片的路徑
-              alt="trash" // 圖片描述
-              width={18} // 圖片的寬度
-              height={18} // 圖片的高度
-            />
+            <Image className="mx-auto" src={`/images/36x/Hero/trash.svg`} alt="trash" width={18} height={18} />
           </div>
           <div
             onClick={getOrderReportFile}
@@ -91,10 +85,10 @@ const OrderList = () => {
           >
             <Image
               className="mx-auto"
-              src={`/images/36x/Hero/arrow-down-tray.svg`} // 圖片的路徑
-              alt="arrow-down-tray" // 圖片描述
-              width={18} // 圖片的寬度
-              height={18} // 圖片的高度
+              src={`/images/36x/Hero/arrow-down-tray.svg`}
+              alt="arrow-down-tray"
+              width={18}
+              height={18}
             />
             下載
           </div>
@@ -135,13 +129,7 @@ const OrderList = () => {
                         openOrderDetail(order)
                       }}
                     >
-                      <Image
-                        className=""
-                        src={`/images/36x/clipboard-list.svg`} // 圖片的路徑
-                        alt="detail" // 圖片描述
-                        width={18} // 圖片的寬度
-                        height={18} // 圖片的高度
-                      />
+                      <Image className="" src={`/images/36x/clipboard-list.svg`} alt="detail" width={18} height={18} />
                     </div>
                   </div>
                 </div>
@@ -150,13 +138,7 @@ const OrderList = () => {
           </div>
         ) : (
           <div className="w-full rounded-sm bg-gray-800 p-8 text-center ring-1 ring-gray-600">
-            <Image
-              className="mx-auto"
-              src={`/images/App/emptyimage.svg`} // 圖片的路徑
-              alt="emptyimage" // 圖片描述
-              width={168} // 圖片的寬度
-              height={104} // 圖片的高度
-            />
+            <Image className="mx-auto" src={`/images/App/emptyimage.svg`} alt="emptyimage" width={168} height={104} />
             <div className="c2 mt-6">目前無訂單，又是嶄新的一天!</div>
           </div>
         )}

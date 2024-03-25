@@ -73,10 +73,10 @@ const OrderCategory = ({ initcategory, onClose, update }) => {
                             <div>
                               <Image
                                 className="mx-auto"
-                                src={`/images/36x/Hero/bars-3.svg`} // 圖片的路徑
-                                alt="bars-3" // 圖片描述
-                                width={18} // 圖片的寬度
-                                height={18} // 圖片的高度
+                                src={`/images/36x/Hero/bars-3.svg`}
+                                alt="bars-3"
+                                width={18}
+                                height={18}
                               />
                             </div>
                             <div className="c2">{category.name}</div>

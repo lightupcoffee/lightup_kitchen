@@ -160,32 +160,47 @@ const Uncheck = () => {
               style={{ width: '375px' }}
             >
               <div className="p-4">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start gap-2">
                   <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
                     # {order.orderid.toString().padStart(6, '0')}
                   </span>
-                  <div
-                    className={` cursor-pointer rounded-sm border-1 p-2 ${editobj?.orderid === order.orderid ? 'border-gray-800 bg-gray-900' : ''}`}
-                    onClick={() => {
-                      editmode(order)
-                    }}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 36 36"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`${editobj?.orderid === order.orderid ? 'stroke-gray-600' : 'stroke-white'}`}
+                  {order.paymenttype == 'Line Pay' && (
+                    <span className="c3 rounded-xl bg-emerald-500/10 px-2 py-1 text-emerald-500">Line Pay</span>
+                  )}
+                  {order.paymenttype == 'Line Pay' ? (
+                    <div
+                      className="ml-auto cursor-pointer rounded-sm  border-1 p-2 "
+                      onClick={() => {
+                        setdeleteOrderid(order.orderid)
+                        toggleDialog('deleteConfirmDialog', true)
+                      }}
                     >
-                      <path
-                        d="M25.293 6.73014L27.8235 4.19814C28.351 3.67062 29.0665 3.37427 29.8125 3.37427C30.5585 3.37427 31.274 3.67062 31.8015 4.19814C32.329 4.72565 32.6254 5.44112 32.6254 6.18714C32.6254 6.93316 32.329 7.64862 31.8015 8.17614L10.248 29.7296C9.45499 30.5222 8.47705 31.1047 7.4025 31.4246L3.375 32.6246L4.575 28.5971C4.89492 27.5226 5.47745 26.5446 6.27 25.7516L25.2945 6.73014H25.293ZM25.293 6.73014L29.25 10.6871"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
+                      <Image src={`/images/36x/Hero/trash.svg`} alt="plus" width={18} height={18} />
+                    </div>
+                  ) : (
+                    <div
+                      className={`ml-auto cursor-pointer rounded-sm border-1 p-2 ${editobj?.orderid === order.orderid ? 'border-gray-800 bg-gray-900' : ''}`}
+                      onClick={() => {
+                        editmode(order)
+                      }}
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 36 36"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`${editobj?.orderid === order.orderid ? 'stroke-gray-600' : 'stroke-white'}`}
+                      >
+                        <path
+                          d="M25.293 6.73014L27.8235 4.19814C28.351 3.67062 29.0665 3.37427 29.8125 3.37427C30.5585 3.37427 31.274 3.67062 31.8015 4.19814C32.329 4.72565 32.6254 5.44112 32.6254 6.18714C32.6254 6.93316 32.329 7.64862 31.8015 8.17614L10.248 29.7296C9.45499 30.5222 8.47705 31.1047 7.4025 31.4246L3.375 32.6246L4.575 28.5971C4.89492 27.5226 5.47745 26.5446 6.27 25.7516L25.2945 6.73014H25.293ZM25.293 6.73014L29.25 10.6871"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  )}
                 </div>
                 <div className="h2 text-center">{order.tableid} 桌</div>
                 <div className="c4 text-center text-gray-500">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
