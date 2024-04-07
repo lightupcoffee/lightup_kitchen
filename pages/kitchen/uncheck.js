@@ -157,7 +157,7 @@ const Uncheck = () => {
             <div
               key={order.orderid}
               className="flex flex-col overflow-auto rounded-lg border-1 border-gray-600 bg-gray-800"
-              style={{ width: '375px' }}
+              style={{ minWidth: '375px' }}
             >
               <div className="p-4">
                 <div className="flex items-start gap-2">
