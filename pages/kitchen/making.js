@@ -74,9 +74,7 @@ const Making = () => {
           <div key={order.orderid} className="flex  flex-col rounded-lg bg-gray-800 " style={{ minWidth: '375px' }}>
             <div className="p-4">
               <div>
-                <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1">
-                  # {order.orderid.toString().padStart(6, '0')}
-                </span>
+                <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1"># {order.ordernumber}</span>
               </div>
               <div className="h2 text-center">{order.tableid} 桌</div>
               <div className="c4 text-center text-gray-500">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>

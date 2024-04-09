@@ -162,7 +162,7 @@ const Uncheck = () => {
               <div className="p-4">
                 <div className="flex items-start gap-2">
                   <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
-                    # {order.orderid.toString().padStart(6, '0')}
+                    # {order.ordernumber}
                   </span>
                   {order.paymenttype == 'Line Pay' && (
                     <span className="c3 rounded-xl bg-emerald-500/10 px-2 py-1 text-emerald-500">Line Pay</span>

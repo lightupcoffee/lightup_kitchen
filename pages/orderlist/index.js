@@ -110,7 +110,7 @@ const OrderList = () => {
                   key={order.orderid}
                   className="c3 mt-3 flex items-center justify-between rounded-sm  border-1 border-gray-600 bg-gray-800 px-4 py-3 text-gray-400 first:mt-0"
                 >
-                  <div className="w-1/6 "># {order.orderid.toString().padStart(6, '0')}</div>
+                  <div className="w-1/6 "># {order.ordernumber}</div>
                   <div className="w-1/12">{order.tableid.padStart(2, '0')}</div>
                   <div className="w-1/6">NT ${formatCurrency(order.totalamount)}</div>
                   <div className="w-1/6">
@@ -149,7 +149,7 @@ const OrderList = () => {
             <div className="p-4">
               <div className="flex items-start justify-between">
                 <span className="c3 rounded-xl bg-white bg-opacity-10 px-2 py-1 text-gray-400">
-                  # {orderdetailobj.orderid.toString().padStart(6, '0')}
+                  # {orderdetailobj.ordernumber}
                 </span>
                 <span className={` rounded-xl px-2 py-1 ${paymenttypeColor(orderdetailobj.paymenttype)}`}>
                   {orderdetailobj.paymenttype ?? '未付款'}
