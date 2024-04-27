@@ -62,18 +62,13 @@ export default async function getAllOrderReportFile(req, res) {
     })
 
     const sheet2 = workbook.addWorksheet('品項列表_' + dateString)
-
-    // 添加列标题
     sheet2.columns = [
       { header: '品項', key: 'item', width: 20 },
       { header: '單價', key: 'price', width: 10 },
       { header: '數量', key: 'quantity', width: 10 },
       { header: '總金額', key: 'totalamount', width: 10 },
     ]
-    // 定義一個以品項名稱為鍵，存儲品項信息的對象
     const itemSummary = {}
-
-    // 遍歷所有訂單並累積每個品項的數量
     orders.forEach((order) => {
       const items = JSON.parse(order.item)
       items.forEach((item) => {
@@ -85,7 +80,6 @@ export default async function getAllOrderReportFile(req, res) {
       })
     })
 
-    // 將匯總的品項信息添加到 Excel 表中
     products.forEach((product) => {
       const summary = itemSummary[product.name]
       if (summary) {
@@ -97,8 +91,6 @@ export default async function getAllOrderReportFile(req, res) {
         })
       }
     })
-
-    // 設置響應頭部
 
     const filename = `訂單_${dateString}.xlsx`
     const encodedFilename = encodeURIComponent(filename)
@@ -123,6 +115,9 @@ export default async function getAllOrderReportFile(req, res) {
 }
 
 function switchtimezoom(dateInput, formatOptions = {}, timeZone = 'Asia/Taipei') {
+  if (!dateInput) {
+    return ''
+  }
   const formatter = new Intl.DateTimeFormat('zh-TW', {
     ...formatOptions,
     timeZone,
