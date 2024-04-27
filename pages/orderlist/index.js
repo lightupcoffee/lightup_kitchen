@@ -100,8 +100,9 @@ const OrderList = () => {
               <div className="w-1/12">桌號</div>
               <div className="w-1/6">訂單收入</div>
               <div className="w-1/6">付款方式</div>
-              <div className="w-1/4">接單時間</div>
+              <div className="w-1/6">接單時間</div>
               <div className="w-1/6">結帳時間</div>
+              <div className="w-1/12">完成時間</div>
               <div className="w-1/12"></div>
             </div>
             <div className="hide-scrollbar flex-1 overflow-auto ">
@@ -118,9 +119,12 @@ const OrderList = () => {
                       {order.paymenttype ?? '未付款'}
                     </span>
                   </div>
-                  <div className="w-1/4">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
+                  <div className="w-1/6">{formatDate(order.createtime, 'yyyy/MM/dd hh:mm')}</div>
                   <div className="w-1/6">
                     {!order.paymenttime ? '-' : formatDate(order.paymenttime, 'yyyy/MM/dd hh:mm')}
+                  </div>
+                  <div className="w-1/12">
+                    {!order.completedtime ? '-' : formatDate(order.completedtime, 'yyyy/MM/dd hh:mm')}
                   </div>
                   <div className="w-1/12 ">
                     <div

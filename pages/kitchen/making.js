@@ -134,7 +134,10 @@ const Making = () => {
           <div
             className="w-full cursor-pointer  rounded-default bg-orange-500 py-3.5 text-center "
             onClick={() => {
-              editOrder(completedOrderId, [{ column: 'status', value: 2 }]).then(() => {
+              editOrder(completedOrderId, [
+                { column: 'status', value: 2 },
+                { column: 'completedtime', value: new Date() },
+              ]).then(() => {
                 setcompletedOrderDialog(false)
               })
             }}
